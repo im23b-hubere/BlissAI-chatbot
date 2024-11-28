@@ -18,7 +18,7 @@ section {
 .form-box {
   position: relative;
   width: 400px;
-  height: 450px;
+  height: 500px;
   background: transparent;
   /* border: 1px solid white; */
   box-shadow: 0px 0px 20px black;
@@ -37,7 +37,7 @@ h2 {
 
 .inputbox {
   position: relative;
-  margin: 30px 0;
+  margin: 20px 0;
   width: 310px;
   border-bottom: 2px solid #fff;
 }
@@ -77,36 +77,6 @@ input:valid ~ label {
   color: #fff;
   font-size: 1.2em;
   top: 20px;
-}
-
-.forgotpw {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0 15px;
-  font-size: 0.9em;
-  color: #fff;
-}
-
-.forgotpw label:nth-child(2) {
-  order: 1;
-}
-
-.forgotpw label {
-  display: flex;
-  align-items: center;
-}
-
-.forgotpw label input[type="checkbox"] {
-  margin-right: 6px;
-}
-
-.forgotpw label a {
-  color: #fff;
-  text-decoration: none;
-}
-
-.forgotpw label a:hover {
-  text-decoration: underline;
 }
 
 button {

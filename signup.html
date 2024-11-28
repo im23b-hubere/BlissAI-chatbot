@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="auth_style.css" />
-    <title>Login Formular</title>
+    <link rel="stylesheet" href="signup_style.css" />
+    <title>Registration form</title>
   </head>
   <body>
     <section>
       <div class="form-box">
         <div class="form">
           <form action="">
-            <h2>Login</h2>
+            <h2>Register</h2>
             <div class="inputbox">
               <input id="email" type="email" required />
               <label for="email">E-Mail</label>
@@ -20,18 +20,13 @@
               <input id="password" type="password" required />
               <label for="password">Password</label>
             </div>
-            <div class="forgotpw">
-              <label for="remember-me">
-                <input id="remember-me" type="checkbox" />
-                Stay logged in
-              </label>
-              <label>
-                <a href="#">Forgot your password?</a>
-              </label>
+            <div class="inputbox">
+              <input id="confirm-password" type="password" required />
+              <label for="confirm-password">Confirm password</label>
             </div>
-            <button id="login" type="submit">Anmelden</button>
+            <button id="signup" type="submit">Create</button>
             <div class="register">
-              <p>No account? <a onclick="window.location.href='signup.html'">Create account</a></p>
+              <p>Already have an account? <a onclick="window.location.href='auth.html'" >Login</a></p>
             </div>
           </form>
         </div>

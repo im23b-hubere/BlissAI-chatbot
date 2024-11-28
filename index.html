@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chatbot</title>
+  <title>BlissAI</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,27 +13,27 @@
   <ul class="chat-list" id="chat-list">
     <!-- Chat items will be populated here -->
   </ul>
-  <button class="new-chat-button">Neuer Chat</button>
+  <button class="new-chat-button">New Chat</button>
 </div>
 
 <div class="chat-container">
   <header class="chat-header">
     <h1>BlissAI</h1>
-    <button class="account-button">Account</button>
+    <button class="account-button" onclick="window.location.href='auth.html'" >Login</button>
   </header>
   <div class="chat-messages" id="chat-messages">
-    <!-- Messages will be displayed here -->
+
   </div>
   <form class="chat-form" id="chat-form">
     <input
             type="text"
             id="user-input"
             class="chat-input"
-            placeholder="Schreibe eine Nachricht..."
+            placeholder="Write a message..."
             required
             autocomplete="off"
     >
-    <button type="submit" class="send-button">Senden</button>
+    <button type="submit" class="send-button">Send</button>
   </form>
 </div>
 

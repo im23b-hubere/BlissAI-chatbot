@@ -1,18 +1,40 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for
-import requests
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from db import create_account
-
+from flask_mysqldb import MySQL
+import requests
 
 app = Flask(__name__)
+
+# MySQL-Konfigurationsparameter
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_PORT'] = 3306
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'hello1234'
+app.config['MYSQL_DB'] = 'blissAI'
+
+mysql = MySQL(app)
 
 # CORS aktivieren
 CORS(app)
 
-# Chat Route
+def create_account(email, password):
+    """Funktion zum Erstellen eines neuen Benutzerkontos"""
+    cur = mysql.connection.cursor()
+
+    cur.execute("SELECT * FROM User WHERE email = %s", [email])
+    existing_user = cur.fetchone()
+
+    if existing_user:
+        return False
+
+    cur.execute("INSERT INTO User (email, password) VALUES (%s, %s)", (email, password))
+    mysql.connection.commit()
+
+    cur.close()
+    return True
+
 @app.route('/chat', methods=['POST'])
 def chat():
-
     user_message = request.json.get("message")
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
@@ -28,12 +50,10 @@ def chat():
     }
 
     try:
-        # Anfrage an die API senden
         response = requests.post("https://meta-llama-3-1-405b1.p.rapidapi.com/chat", headers=headers, json=payload)
         response.raise_for_status()
         data = response.json()
         print("API Response:", data)
-
 
         if "choices" in data and len(data["choices"]) > 0:
             content = data["choices"][0].get("message", {}).get("content", "Keine Antwort")
@@ -52,17 +72,23 @@ def signup_page():
 @app.route('/create_account', methods=['POST'])
 def create_account_route():
     """Erstellt ein Benutzerkonto"""
-    email = request.form['email']
-    password = request.form['password']
-    confirm_password = request.form['confirm-password']
+    email = request.form.get('email')
+    password = request.form.get('password')
+    confirm_password = request.form.get('confirm-password')
+
+    if not email or not password or not confirm_password:
+        return jsonify({"error": "Alle Felder sind erforderlich"}), 400
 
     if password != confirm_password:
         return jsonify({"error": "Passwörter stimmen nicht überein"}), 400
 
-    if create_account(email, password):
-        return jsonify({"message": "Account created successfully!"}), 201
-    else:
-        return jsonify({"error": "User already exists, try another email."}), 400
+    try:
+        if create_account(email, password):
+            return jsonify({"message": "Account created successfully!"}), 201
+        else:
+            return jsonify({"error": "User already exists, try another email."}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

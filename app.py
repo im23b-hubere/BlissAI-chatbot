@@ -103,13 +103,14 @@ def login():
 
     if user:
         session['user'] = user[0]
-        flash('Login erfolgreich!', 'success')
-        return redirect(url_for('chat_page'))
+        return jsonify({"message": "Login erfolgreich!"}), 200
     else:
-        flash('Ungültige Anmeldeinformationen', 'error')
-        return redirect(url_for('login_page'))
+        return jsonify({"error": "Ungültige Anmeldeinformationen"}), 400
 
-@app.route('/chat_page')
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 def chat_page():
     if 'user' in session:
         return render_template('index.html')

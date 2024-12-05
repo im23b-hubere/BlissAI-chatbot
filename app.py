@@ -1,9 +1,10 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash
 from flask_cors import CORS
 from flask_mysqldb import MySQL
 import requests
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'
 
 # MySQL parameter
 app.config['MYSQL_HOST'] = 'localhost'
@@ -38,7 +39,6 @@ def chat():
     user_message = request.json.get("message")
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
-
 
     headers = {
         "Content-Type": "application/json",
@@ -90,6 +90,35 @@ def create_account_route():
             return jsonify({"error": "User already exists, try another email."}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM User WHERE email = %s AND password = %s", (email, password))
+    user = cur.fetchone()
+    cur.close()
+
+    if user:
+        session['user'] = user[0]
+        flash('Login erfolgreich!', 'success')
+        return redirect(url_for('chat_page'))
+    else:
+        flash('Ungültige Anmeldeinformationen', 'error')
+        return redirect(url_for('login_page'))
+
+@app.route('/chat_page')
+def chat_page():
+    if 'user' in session:
+        return render_template('index.html')
+    else:
+        return redirect(url_for('login_page'))
+
+@app.route('/login_page')
+def login_page():
+    return render_template('auth.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

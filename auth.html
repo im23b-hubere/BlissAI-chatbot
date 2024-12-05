@@ -1,44 +1,48 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="auth_style.css" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="auth_style.css"/>
     <title>Login Formular</title>
-  </head>
-  <body>
-    <section>
-      <div class="form-box">
+</head>
+<body>
+<a href="index.html" class="back-arrow" aria-label="Zurück zur Startseite">
+    &#8592;
+</a>
+
+<section>
+    <div class="form-box">
         <div class="form">
-          <form action="">
-            <h2>Login</h2>
-            <div class="inputbox">
-              <input id="email" type="email" required />
-              <label for="email">E-Mail</label>
-            </div>
+            <form action="">
+                <h2>Login</h2>
+                <div class="inputbox">
+                    <input id="email" type="email" required/>
+                    <label for="email">E-Mail</label>
+                </div>
 
-            <div class="inputbox">
-              <input id="password" type="password" required />
-              <label for="password">Password</label>
-            </div>
+                <div class="inputbox">
+                    <input id="password" type="password" required/>
+                    <label for="password">Password</label>
+                </div>
 
-            <div class="forgotpw">
-              <label for="remember-me">
-                <input id="remember-me" type="checkbox" />
-                Stay logged in
-              </label>
+                <div class="forgotpw">
+                    <label for="remember-me">
+                        <input id="remember-me" type="checkbox"/>
+                        Stay logged in
+                    </label>
 
-              <label>
-                <a href="#">Forgot your password?</a>
-              </label>
-            </div>
-            <button id="login" type="submit">Anmelden</button>
-            <div class="register">
-              <p>No account? <a onclick="window.location.href='signup.html'">Create account</a></p>
-            </div>
-          </form>
+                    <label>
+                        <a href="#">Forgot your password?</a>
+                    </label>
+                </div>
+                <button id="login" type="submit">Anmelden</button>
+                <div class="register">
+                    <p>No account? <a onclick="window.location.href='signup.html'">Create account</a></p>
+                </div>
+            </form>
         </div>
-      </div>
-    </section>
-  </body>
+    </div>
+</section>
+</body>
 </html>

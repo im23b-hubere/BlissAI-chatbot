@@ -5,7 +5,7 @@ import requests
 
 app = Flask(__name__)
 
-# MySQL-Konfigurationsparameter
+# MySQL parameter
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_USER'] = 'root'
@@ -38,6 +38,7 @@ def chat():
     user_message = request.json.get("message")
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
+
 
     headers = {
         "Content-Type": "application/json",

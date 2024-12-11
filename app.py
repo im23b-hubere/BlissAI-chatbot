@@ -1,10 +1,17 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash
 from flask_cors import CORS
 from flask_mysqldb import MySQL
+from flask_session import Session
 import requests
+import jwt
+import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
+
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_PERMANENT'] = False
+Session(app)
 
 # MySQL parameter
 app.config['MYSQL_HOST'] = 'localhost'
@@ -16,12 +23,11 @@ app.config['MYSQL_DB'] = 'blissAI'
 mysql = MySQL(app)
 
 # CORS aktivieren
-CORS(app)
+CORS(app, supports_credentials=True, origins=['http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:5000'])
 
 def create_account(email, password):
     """Funktion zum Erstellen eines neuen Benutzerkontos"""
     cur = mysql.connection.cursor()
-
     cur.execute("SELECT * FROM User WHERE email = %s", [email])
     existing_user = cur.fetchone()
 
@@ -30,9 +36,24 @@ def create_account(email, password):
 
     cur.execute("INSERT INTO User (email, password) VALUES (%s, %s)", (email, password))
     mysql.connection.commit()
-
     cur.close()
     return True
+
+def generate_token(user_id):
+    payload = {
+        'user_id': user_id,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+    }
+    return jwt.encode(payload, app.secret_key, algorithm='HS256')
+
+def verify_token(token):
+    try:
+        payload = jwt.decode(token, app.secret_key, algorithms=['HS256'])
+        return payload['user_id']
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -54,14 +75,13 @@ def chat():
         response = requests.post("https://meta-llama-3-1-405b1.p.rapidapi.com/chat", headers=headers, json=payload)
         response.raise_for_status()
         data = response.json()
-        print("API Response:", data)
 
         if "choices" in data and len(data["choices"]) > 0:
             content = data["choices"][0].get("message", {}).get("content", "Keine Antwort")
         else:
             content = "Keine Antwort"
 
-        return jsonify({"response": content}), 200, {'Content-Type': 'application/json'}
+        return jsonify({"response": content}), 200
     except requests.exceptions.RequestException as e:
         print("Error:", str(e))
         return jsonify({"error": str(e)}), 500
@@ -102,24 +122,26 @@ def login():
     cur.close()
 
     if user:
-        session['user'] = user[0]
-        return jsonify({"message": "Login erfolgreich!"}), 200
+        token = generate_token(user[0])
+        return jsonify({"message": "Login erfolgreich!", "token": token}), 200
     else:
         return jsonify({"error": "Ungültige Anmeldeinformationen"}), 400
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+@app.route('/check_login_status', methods=['GET'])
+def check_login_status():
+    token = request.headers.get('Authorization')
+    if token:
+        user_id = verify_token(token)
+        if user_id:
+            return jsonify({"loggedIn": True}), 200
+    return jsonify({"loggedIn": False}), 200
 
-def chat_page():
+@app.route('/check_session', methods=['GET'])
+def check_session():
     if 'user' in session:
-        return render_template('index.html')
+        return jsonify({"user": session['user']}), 200
     else:
-        return redirect(url_for('login_page'))
-
-@app.route('/login_page')
-def login_page():
-    return render_template('auth.html')
+        return jsonify({"error": "No active session"}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -2,17 +2,34 @@ const chatMessages = document.getElementById("chat-messages");
 const userInput = document.getElementById("user-input");
 const chatForm = document.getElementById("chat-form");
 
+// Login-Button-Element
+const accountButton = document.getElementById("account-button");
+
+document.addEventListener("DOMContentLoaded", () => {
+    const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+
+    if (isLoggedIn) {
+        accountButton.textContent = "Account";
+        accountButton.onclick = () => {
+            window.location.href = "account.html";
+        };
+    } else {
+        accountButton.textContent = "Login";
+        accountButton.onclick = () => {
+            window.location.href = "auth.html";
+        };
+    }
+});
+
 async function sendMessage(event) {
     event.preventDefault();
 
     const message = userInput.value;
     if (!message) return;
 
-    // Nachricht des Benutzers anzeigen
     appendMessage('You', message);
 
     try {
-        // Anfrage an das Flask-Backend senden
         const response = await fetch("http://127.0.0.1:5000/chat", {
             method: "POST",
             headers: {
@@ -28,15 +45,14 @@ async function sendMessage(event) {
         const data = await response.json();
         const botReply = data.response || "Keine Antwort vom Bot.";
         console.log(botReply);
-        // Antwort des Bots anzeigen
         appendMessage('BlissAI', botReply);
     } catch (error) {
-        // Fehlerbehandlung
+
         appendMessage('Error', `Fehler: ${error.message}`);
-        console.error("Fehler beim Abrufen der Antwort:", error);  // Bessere Fehlerausgabe
+        console.error("Fehler beim Abrufen der Antwort:", error);
     }
 
-    userInput.value = '';  // Eingabefeld zurücksetzen
+    userInput.value = '';
 }
 
 function appendMessage(sender, message) {
@@ -44,7 +60,46 @@ function appendMessage(sender, message) {
     messageElement.classList.add('chat-message');
     messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
     chatMessages.appendChild(messageElement);
-    chatMessages.scrollTop = chatMessages.scrollHeight;  // Scrollen zum neuesten Beitrag
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+function loginUser() {
+    localStorage.setItem("loggedIn", "true");
+    window.location.reload();
+}
+
+function logoutUser() {
+    localStorage.removeItem("loggedIn");
+    window.location.reload();
+}
+
+
 chatForm.addEventListener('submit', sendMessage);
+
+async function checkLoginStatus() {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/check_login_status');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const accountButton = document.getElementById('account-button');
+
+        if (data.loggedIn) {
+            accountButton.textContent = 'Account';
+            accountButton.onclick = () => {
+                window.location.href = 'account.html';
+            };
+        } else {
+            accountButton.textContent = 'Login';
+            accountButton.onclick = () => {
+                window.location.href = 'auth.html';
+            };
+        }
+    } catch (error) {
+        console.error('Fehler beim Abrufen des Login-Status:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', checkLoginStatus);

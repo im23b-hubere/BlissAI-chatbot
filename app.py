@@ -23,7 +23,9 @@ app.config['MYSQL_DB'] = 'blissAI'
 mysql = MySQL(app)
 
 # CORS aktivieren
-CORS(app, supports_credentials=True, origins=['http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:5000'])
+CORS(app, supports_credentials=True,
+     origins=['http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:5000'])
+
 
 def create_account(email, password):
     """Funktion zum Erstellen eines neuen Benutzerkontos"""
@@ -39,12 +41,14 @@ def create_account(email, password):
     cur.close()
     return True
 
+
 def generate_token(user_id):
     payload = {
         'user_id': user_id,
         'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
     }
     return jwt.encode(payload, app.secret_key, algorithm='HS256')
+
 
 def verify_token(token):
     try:
@@ -54,6 +58,7 @@ def verify_token(token):
         return None
     except jwt.InvalidTokenError:
         return None
+
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -78,17 +83,22 @@ def chat():
 
         if "choices" in data and len(data["choices"]) > 0:
             content = data["choices"][0].get("message", {}).get("content", "Keine Antwort")
-        else:
-            content = "Keine Antwort"
 
-        return jsonify({"response": content}), 200
+            formatted_response = content.replace(". ", ".\n")
+
+        else:
+            formatted_response = "Keine Antwort"
+
+        return jsonify({"response": formatted_response}), 200
     except requests.exceptions.RequestException as e:
         print("Error:", str(e))
         return jsonify({"error": str(e)}), 500
 
+
 @app.route('/signup', methods=['GET'])
 def signup_page():
     return render_template('signup.html')
+
 
 @app.route('/create_account', methods=['POST'])
 def create_account_route():
@@ -111,6 +121,7 @@ def create_account_route():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @app.route('/login', methods=['POST'])
 def login():
     email = request.form.get('email')
@@ -127,6 +138,7 @@ def login():
     else:
         return jsonify({"error": "Ungültige Anmeldeinformationen"}), 400
 
+
 @app.route('/check_login_status', methods=['GET'])
 def check_login_status():
     token = request.headers.get('Authorization')
@@ -136,12 +148,27 @@ def check_login_status():
             return jsonify({"loggedIn": True}), 200
     return jsonify({"loggedIn": False}), 200
 
+
 @app.route('/check_session', methods=['GET'])
 def check_session():
     if 'user' in session:
         return jsonify({"user": session['user']}), 200
     else:
         return jsonify({"error": "No active session"}), 400
+
+@app.route('/account', methods=['GET'])
+def account():
+    token = request.headers.get('Authorization')
+    if token:
+        user_id = verify_token(token)
+        if user_id:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT email FROM User WHERE id = %s", [user_id])
+            user = cur.fetchone()
+            cur.close()
+            if user:
+                return jsonify({"email": user[0]}), 200
+    return jsonify({"error": "Unauthorized"}), 401
 
 if __name__ == '__main__':
     app.run(debug=True)

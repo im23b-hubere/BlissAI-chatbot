@@ -41,6 +41,7 @@
     document.addEventListener('DOMContentLoaded', async () => {
         const token = localStorage.getItem('token');
         const accountButton = document.getElementById('account-button');
+        const chatList = document.getElementById('chat-list');
 
         if (token) {
             try {
@@ -57,6 +58,19 @@
                     accountButton.onclick = () => {
                         window.location.href = 'account.html';
                     };
+
+                    const chatResponse = await fetch('http://localhost:5000/get_chats', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': token
+                        }
+                    });
+                    const chatData = await chatResponse.json();
+                    chatData.chats.forEach(chatId => {
+                        const li = document.createElement('li');
+                        li.textContent = `Chat ${chatId}`;
+                        chatList.appendChild(li);
+                    });
                 } else {
                     accountButton.textContent = 'Login';
                     accountButton.onclick = () => {

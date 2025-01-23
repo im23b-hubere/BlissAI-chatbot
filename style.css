@@ -38,23 +38,21 @@ body {
 }
 
 .chat-list {
-    margin-top: 20px;
     list-style: none;
     padding: 0;
-    width: 100%;
+    margin: 0;
 }
 
 .chat-item {
     padding: 10px;
-    border-bottom: 1px solid #7f8c8d;
     cursor: pointer;
-    transition: background-color 0.3s;
-    border-radius: 10px;
+    border-bottom: 1px solid #ccc;
 }
 
 .chat-item:hover {
-    background-color: #7f8c8d;
+    background-color: #f0f0f0;
 }
+
 
 .new-chat-button {
     margin-top: auto;
@@ -164,3 +162,11 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.user-message {
+    background-color: #d1e7dd;
+    align-self: flex-end;
+}
+.bot-message {
+    background-color: #f8d7da;
+    align-self: flex-start;
+}

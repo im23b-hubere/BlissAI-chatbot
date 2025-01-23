@@ -23,8 +23,7 @@ app.config['MYSQL_DB'] = 'blissAI'
 mysql = MySQL(app)
 
 # CORS aktivieren
-CORS(app, supports_credentials=True,
-     origins=['http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:5000'])
+CORS(app, supports_credentials=True, origins=['http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:5000'])
 
 
 def create_account(email, password):
@@ -43,6 +42,10 @@ def create_account(email, password):
 
 
 def generate_token(user_id):
+    """
+    :param user_id:
+    :return: token
+    """
     payload = {
         'user_id': user_id,
         'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
@@ -51,6 +54,10 @@ def generate_token(user_id):
 
 
 def verify_token(token):
+    """
+    :param token:
+    :return: verification
+    """
     try:
         payload = jwt.decode(token, app.secret_key, algorithms=['HS256'])
         return payload['user_id']
@@ -62,7 +69,16 @@ def verify_token(token):
 
 @app.route('/chat', methods=['POST'])
 def chat():
+    """
+    :return: Chat message
+    """
     user_message = request.json.get("message")
+    token = request.headers.get('Authorization')
+
+    user_id = verify_token(token)
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
+
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
 
@@ -83,11 +99,17 @@ def chat():
 
         if "choices" in data and len(data["choices"]) > 0:
             content = data["choices"][0].get("message", {}).get("content", "Keine Antwort")
-
             formatted_response = content.replace(". ", ".\n")
-
         else:
             formatted_response = "Keine Antwort"
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO messages (user_id, message, sender) VALUES (%s, %s, %s)",
+                    (user_id, user_message, 'user'))
+        cur.execute("INSERT INTO messages (user_id, message, sender) VALUES (%s, %s, %s)",
+                    (user_id, formatted_response, 'bot'))
+        mysql.connection.commit()
+        cur.close()
 
         return jsonify({"response": formatted_response}), 200
     except requests.exceptions.RequestException as e:
@@ -124,6 +146,9 @@ def create_account_route():
 
 @app.route('/login', methods=['POST'])
 def login():
+    """
+    :return: Login
+    """
     email = request.form.get('email')
     password = request.form.get('password')
 
@@ -141,6 +166,9 @@ def login():
 
 @app.route('/check_login_status', methods=['GET'])
 def check_login_status():
+    """
+    :return: Login Status
+    """
     token = request.headers.get('Authorization')
     if token:
         user_id = verify_token(token)
@@ -151,13 +179,20 @@ def check_login_status():
 
 @app.route('/check_session', methods=['GET'])
 def check_session():
+    """
+    :return: user session
+    """
     if 'user' in session:
         return jsonify({"user": session['user']}), 200
     else:
         return jsonify({"error": "No active session"}), 400
 
+
 @app.route('/account', methods=['GET'])
 def account():
+    """
+    :return: account page
+    """
     token = request.headers.get('Authorization')
     if token:
         user_id = verify_token(token)
@@ -169,6 +204,48 @@ def account():
             if user:
                 return jsonify({"email": user[0]}), 200
     return jsonify({"error": "Unauthorized"}), 401
+
+
+@app.route('/save_chat', methods=['POST'])
+def save_chat():
+    """
+    :return: saved chat
+    """
+    chat_id = request.json.get('chatId')
+    user_id = verify_token(request.headers.get('Authorization'))
+
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO Chats (user_id, chat_id) VALUES (%s, %s)", (user_id, chat_id))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"message": "Chat saved successfully!"}), 200
+
+
+@app.route('/get_chats', methods=['GET'])
+def get_chats():
+    """
+    :return:Chat to account (still not working)
+    """
+    token = request.headers.get('Authorization')
+    user_id = verify_token(token)
+
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT chat_id FROM Chats WHERE user_id = %s", [user_id])
+        chats = cur.fetchall()
+        cur.close()
+
+        chat_list = [chat[0] for chat in chats]
+        return jsonify({"chats": chat_list}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

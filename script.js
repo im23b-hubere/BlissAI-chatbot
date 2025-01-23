@@ -103,3 +103,35 @@ function logoutUser() {
 }
 
 chatForm.addEventListener('submit', sendMessage);
+
+const chatList = document.getElementById("chat-list");
+const newChatButton = document.querySelector(".new-chat-button");
+
+newChatButton.addEventListener("click", createNewChat);
+
+
+
+function createNewChat() {
+    chatMessages.innerHTML = '';
+
+    const chatId = `chat-${Date.now()}`; // Einzigartige ID für Chat
+    const chatItem = document.createElement('li');
+    chatItem.textContent = `Chat ${chatList.children.length + 1}`;
+    chatItem.dataset.chatId = chatId;
+    chatItem.classList.add("chat-item");
+
+    chatItem.addEventListener('click', () => loadChat(chatId));
+
+    chatList.appendChild(chatItem);
+
+    saveChat(chatId);
+}
+
+function loadChat(chatId) {
+    console.log(`Lade Chat mit ID: ${chatId}`);
+    chatMessages.innerHTML = `<p>Dies ist der Verlauf von ${chatId}.</p>`;
+}
+
+function saveChat(chatId) {
+    console.log(`Speichere Chat mit ID: ${chatId}`);
+}

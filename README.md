@@ -1,22 +1,28 @@
 # BlissAI Chatbot
 
+## 🛑 **Project Status**  
+This project is currently on hold. After starting BlissAI, I realized that it was too complicated and messy from the beginning, which made it hard to keep working on. Recently, one of my father’s employee shared a new project idea with me. He is working on it for their company, and it seems more organized and fits better with what I want to do right now. Because of this, I am focusing on the new project for now.
+
+BlissAI might still be continued in the future, but for now, this repository will stay inactive.
+
 ## 🔍 **Project Overview**  
-BlissAI is a versatile AI chatbot that combines frontend and backend technologies to provide an interactive user experience. The project integrates a Python backend with a Flask API to interact with a conversational AI, along with a robust frontend built using HTML, CSS, and JavaScript. It also includes user authentication, account management (in progress), and a database for storing user data. This full-stack application is designed to allow users to engage with an AI chatbot seamlessly.
+BlissAI is an AI chatbot that combines frontend and backend technologies to create an interactive user experience. The project uses a Python backend with a Flask API to connect with a conversational AI, and a frontend built with HTML, CSS, and JavaScript. It also has user authentication, account management (still in progress), and a database for storing user data. The goal was to make a full-stack app where users could chat with an AI easily.
 
 ## ⚙️ **Technologies Used**  
 - **Frontend:** HTML, CSS, JavaScript  
 - **Backend:** Python, Flask  
 - **Database:** MySQL  
-- **API Integration:** Meta Llama 3.1 from rapidapi
+- **API Integration:** Meta Llama 3.1 from RapidAPI  
 - **Authentication:** User login and signup system  
 - **Version Control:** GitHub
 
 ## 🚀 **Features**  
-- **AI Chatbot Integration:** Communicate with the chatbot using natural language through a simple web interface.  
-- **User Authentication:** Signup, login, and account management to ensure a personalized experience.  
-- **Database Support:** User data (e.g., login credentials, chat history(in progress)) is stored and managed in a database.  
-- **Dynamic Frontend:** The frontend is responsive and interactive, featuring real-time updates and smooth user interactions.  
-- **Account Management:** After logging in, users are redirected to their personal account page where they can manage their profile.
+- **AI Chatbot** 
+- **User Authentication:** Signup, login, and account management for a personalized experience.  
+- **Database Support:** User data like login credentials and chat history (still in progress) is saved in a database.  
+- **Dynamic Frontend:** The frontend is responsive and interactive.
+- **Account Management:** Users can manage their profiles after logging in.
 
+---
 
-
+You can check out the current state of the project, but please note that it’s not being worked on actively. If you want to give feedback or collaborate, feel free to open an issue.

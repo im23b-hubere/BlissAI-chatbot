@@ -2,9 +2,6 @@ import { Avatar } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import { Message as MessageType } from "@prisma/client"
 import ReactMarkdown from "react-markdown"
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"
-import { CodeProps } from "react-markdown/lib/ast-to-react"
 import { User, Bot, Copy, CheckCheck } from "lucide-react"
 import { motion } from "framer-motion"
 import { useState } from "react"
@@ -66,73 +63,7 @@ export function Message({ message }: MessageProps) {
         </div>
         
         <div className="prose prose-neutral dark:prose-invert max-w-full">
-          <ReactMarkdown
-            components={{
-              code: ({ node, inline, className, children, ...props }: CodeProps) => {
-                const match = /language-(\w+)/.exec(className || "")
-                return !inline && match ? (
-                  <div className="relative group">
-                    <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              size="icon" 
-                              variant="ghost" 
-                              className="h-7 w-7 bg-muted/50 hover:bg-muted"
-                              onClick={() => {
-                                navigator.clipboard.writeText(String(children));
-                                // Visual feedback could be added
-                              }}
-                            >
-                              <Copy className="h-3 w-3" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Copy code</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                    <SyntaxHighlighter
-                      {...props}
-                      style={vscDarkPlus}
-                      language={match[1]}
-                      PreTag="div"
-                      className="rounded-md !mt-0"
-                    >
-                      {String(children).replace(/\n$/, "")}
-                    </SyntaxHighlighter>
-                  </div>
-                ) : (
-                  <code {...props} className={cn(className, "bg-muted px-1 py-0.5 rounded")}>
-                    {children}
-                  </code>
-                )
-              },
-              p: ({ children }) => (
-                <p className="mb-4 last:mb-0">{children}</p>
-              ),
-              ul: ({ children }) => (
-                <ul className="list-disc pl-8 mb-4 space-y-2">{children}</ul>
-              ),
-              ol: ({ children }) => (
-                <ol className="list-decimal pl-8 mb-4 space-y-2">{children}</ol>
-              ),
-              li: ({ children }) => (
-                <li className="mb-1">{children}</li>
-              ),
-              h1: ({ children }) => (
-                <h1 className="text-2xl font-bold mb-4 mt-6">{children}</h1>
-              ),
-              h2: ({ children }) => (
-                <h2 className="text-xl font-bold mb-3 mt-6">{children}</h2>
-              ),
-              h3: ({ children }) => (
-                <h3 className="text-lg font-bold mb-3 mt-5">{children}</h3>
-              ),
-            }}
-          >
+          <ReactMarkdown>
             {message.content}
           </ReactMarkdown>
         </div>

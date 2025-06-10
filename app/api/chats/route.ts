@@ -5,14 +5,17 @@ import { NextRequest, NextResponse } from "next/server"
 // Hilfsfunktion für die Authentifizierung auf Serverseite
 async function getCurrentUser() {
   try {
-    // Direkt Session abrufen ohne Parameter
+    // Session ohne Parameter abrufen (verwendet automatisch die Route-Handler)
     const session = await getServerSession();
     
     if (!session?.user?.email) {
+      console.log("No session or email found");
       return null;
     }
     
-    // Demo-Benutzer aus der DB abrufen
+    console.log("Session found for email:", session.user.email);
+    
+    // Benutzer aus der DB abrufen
     const user = await prisma.user.findUnique({
       where: {
         email: session.user.email
@@ -20,6 +23,7 @@ async function getCurrentUser() {
     });
 
     if (!user) {
+      console.log("User not found in DB, creating demo user");
       // Für Demo-Zwecke: Wenn ein Benutzer eingeloggt ist, aber nicht in der DB vorhanden,
       // erstellen wir den Demo-Benutzer
       try {
@@ -31,6 +35,7 @@ async function getCurrentUser() {
           }
         });
       } catch (error) {
+        console.log("Error creating user, trying to find existing demo user");
         // Wenn es bereits existiert, versuchen wir es abzurufen
         return await prisma.user.findUnique({
           where: { email: "demo@example.com" }
@@ -38,6 +43,7 @@ async function getCurrentUser() {
       }
     }
     
+    console.log("Found user:", user.id);
     return user;
   } catch (error) {
     console.error("Error getting user:", error);
@@ -51,6 +57,7 @@ export async function GET() {
     const user = await getCurrentUser();
     
     if (!user) {
+      console.log("GET /api/chats - Unauthorized");
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
@@ -78,6 +85,7 @@ export async function POST() {
     const user = await getCurrentUser();
     
     if (!user) {
+      console.log("POST /api/chats - Unauthorized");
       return new NextResponse("Unauthorized", { status: 401 })
     }
 

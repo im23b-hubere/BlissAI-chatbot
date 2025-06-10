@@ -22,14 +22,17 @@ interface RouteParams {
 // Hilfsfunktion für die Authentifizierung auf Serverseite
 async function getCurrentUser() {
   try {
-    // Direkt Session abrufen ohne Parameter
+    // Session ohne Parameter abrufen (verwendet automatisch die Route-Handler)
     const session = await getServerSession();
     
     if (!session?.user?.email) {
+      console.log("No session or email found");
       return null;
     }
     
-    // Demo-Benutzer aus der DB abrufen
+    console.log("Session found for email:", session.user.email);
+    
+    // Benutzer aus der DB abrufen
     const user = await prisma.user.findUnique({
       where: {
         email: session.user.email
@@ -37,6 +40,7 @@ async function getCurrentUser() {
     });
 
     if (!user) {
+      console.log("User not found in DB, creating demo user");
       // Für Demo-Zwecke: Wenn ein Benutzer eingeloggt ist, aber nicht in der DB vorhanden,
       // nehmen wir den Demo-Benutzer
       try {
@@ -48,6 +52,7 @@ async function getCurrentUser() {
           }
         });
       } catch (error) {
+        console.log("Error creating user, trying to find existing demo user");
         // Wenn es bereits existiert, versuchen wir es abzurufen
         return await prisma.user.findUnique({
           where: { email: "demo@example.com" }
@@ -55,6 +60,7 @@ async function getCurrentUser() {
       }
     }
     
+    console.log("Found user:", user.id);
     return user;
   } catch (error) {
     console.error("Error getting user:", error);
@@ -68,10 +74,13 @@ export async function GET(req: Request, { params }: RouteParams) {
     const user = await getCurrentUser();
     
     if (!user) {
+      console.log("GET /api/chats/[chatId]/messages - Unauthorized");
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
     const { chatId } = params
+
+    console.log(`Fetching messages for chat ${chatId}, user ${user.id}`);
 
     // Verify the chat belongs to the user
     const chat = await prisma.chat.findUnique({
@@ -82,6 +91,7 @@ export async function GET(req: Request, { params }: RouteParams) {
     })
 
     if (!chat) {
+      console.log(`Chat ${chatId} not found for user ${user.id}`);
       return new NextResponse("Chat not found", { status: 404 })
     }
 
@@ -95,6 +105,7 @@ export async function GET(req: Request, { params }: RouteParams) {
       },
     })
 
+    console.log(`Found ${messages.length} messages for chat ${chatId}`);
     return NextResponse.json({ messages })
   } catch (error) {
     console.error("[MESSAGES_GET]", error)
@@ -108,15 +119,20 @@ export async function POST(req: Request, { params }: RouteParams) {
     const user = await getCurrentUser();
     
     if (!user) {
+      console.log("POST /api/chats/[chatId]/messages - Unauthorized");
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
     const { chatId } = params
-    const { content } = await req.json()
+    const body = await req.json();
+    const { content } = body;
 
     if (!content) {
+      console.log("POST /api/chats/[chatId]/messages - No content provided");
       return new NextResponse("Content is required", { status: 400 })
     }
+
+    console.log(`Creating new message in chat ${chatId} for user ${user.id}`);
 
     // Verify the chat belongs to the user
     const chat = await prisma.chat.findUnique({
@@ -127,11 +143,13 @@ export async function POST(req: Request, { params }: RouteParams) {
     })
 
     if (!chat) {
+      console.log(`Chat ${chatId} not found for user ${user.id}`);
       return new NextResponse("Chat not found", { status: 404 })
     }
 
     // Update chat title if it's a new chat
     if (chat.title === "New Chat") {
+      console.log(`Updating title for new chat ${chatId}`);
       await prisma.chat.update({
         where: { id: chatId },
         data: {
@@ -150,6 +168,8 @@ export async function POST(req: Request, { params }: RouteParams) {
       },
     })
 
+    console.log(`User message created: ${userMessage.id}`);
+
     // Get chat history
     const messages = await prisma.message.findMany({
       where: {
@@ -166,6 +186,8 @@ export async function POST(req: Request, { params }: RouteParams) {
       content: msg.content,
     }))
 
+    console.log(`Sending ${formattedMessages.length} messages to OpenAI`);
+
     // Get AI response
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -179,6 +201,7 @@ export async function POST(req: Request, { params }: RouteParams) {
     })
 
     const aiResponse = completion.choices[0]?.message?.content || "Sorry, I couldn't generate a response."
+    console.log(`Received AI response of ${aiResponse.length} characters`);
 
     // Save AI response
     const aiMessage = await prisma.message.create({
@@ -189,6 +212,8 @@ export async function POST(req: Request, { params }: RouteParams) {
         chatId,
       },
     })
+
+    console.log(`AI message created: ${aiMessage.id}`);
 
     // Update the chat's updatedAt time
     await prisma.chat.update({

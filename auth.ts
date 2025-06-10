@@ -10,8 +10,8 @@ export const { auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     StackExchangeProvider({
-      clientId: "a30ae3b8-d708-4861-8fb6-9b188945d43b",
-      clientSecret: "pck_ehvs68v3cpqp2acwhe268dbyn8msn5kxe9pq3gvk5h448",
+      clientId: process.env.STACK_EXCHANGE_CLIENT_ID || "a30ae3b8-d708-4861-8fb6-9b188945d43b",
+      clientSecret: process.env.STACK_EXCHANGE_CLIENT_SECRET || "pck_ehvs68v3cpqp2acwhe268dbyn8msn5kxe9pq3gvk5h448",
     }),
     CredentialsProvider({
       name: "Credentials",

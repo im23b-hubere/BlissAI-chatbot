@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/db"
 import { Adapter } from "next-auth/adapters"
 import CredentialsProvider from "next-auth/providers/credentials"
+import bcrypt from "bcrypt"
 
 // Client-seitige Authentifizierung - verwendet von der Anwendung, nicht von den API-Routen
 export const { auth, signIn, signOut } = NextAuth({
@@ -16,22 +17,28 @@ export const { auth, signIn, signOut } = NextAuth({
       },
       async authorize(credentials) {
         console.log("Client - Attempting credentials authorization with:", { email: credentials?.email });
-        
-        // This is a simple demo auth - in production, you'd want to use a real authentication system
-        if (credentials?.email === "demo@example.com" && credentials?.password === "demo") {
-          console.log("Client - Credentials login successful");
-          const user = {
-            id: "demo-user",
-            name: "Demo User",
-            email: "demo@example.com",
-            image: null
-          };
-          // Die Benutzererstellung erfolgt in der API-Route
-          return user;
+        if (!credentials?.email || !credentials?.password) return null;
+        // Suche User in DB
+        const user = await prisma.user.findUnique({ where: { email: credentials.email }, select: { id: true, name: true, email: true, image: true, hashedPassword: true } });
+        console.log("[LOGIN] User fetched:", user);
+        if (!user || !user.hashedPassword) {
+          console.log("[LOGIN] User not found or no hashedPassword");
+          return null;
         }
-        
-        console.log("Client - Credentials login failed");
-        return null;
+        // Vergleiche Passwort
+        const valid = await bcrypt.compare(credentials.password, user.hashedPassword);
+        console.log("[LOGIN] bcrypt.compare result:", valid);
+        if (!valid) {
+          console.log("[LOGIN] Password invalid");
+          return null;
+        }
+        console.log("[LOGIN] Login successful for:", user.email);
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+        };
       }
     })
   ],

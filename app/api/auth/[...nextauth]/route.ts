@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/db"
 import { Adapter } from "next-auth/adapters"
 import CredentialsProvider from "next-auth/providers/credentials"
+import bcrypt from "bcrypt"
 
 // Wir verwenden die gleiche Konfiguration wie in auth.ts, aber erstellen eine eigene Handler-Instanz
 const handler = NextAuth({
@@ -16,44 +17,28 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         console.log("API Route - Attempting credentials authorization with:", { email: credentials?.email });
-        
-        // This is a simple demo auth - in production, you'd want to use a real authentication system
-        if (credentials?.email === "demo@example.com" && credentials?.password === "demo") {
-          console.log("API Route - Credentials login successful");
-          const user = {
-            id: "demo-user",
-            name: "Demo User",
-            email: "demo@example.com",
-            image: null
-          };
-
-          // Create a demo user in prisma if it doesn't exist yet
-          try {
-            const existingUser = await prisma.user.findUnique({
-              where: { email: user.email },
-            });
-            
-            if (!existingUser) {
-              console.log("API Route - Creating demo user in database");
-              await prisma.user.create({
-                data: {
-                  id: user.id,
-                  name: user.name,
-                  email: user.email,
-                  image: user.image,
-                }
-              });
-            }
-          } catch (error) {
-            console.error("API Route - Error handling user creation:", error);
-            // Continue even if this fails - the JWT will still work
-          }
-          
-          return user;
+        if (!credentials?.email || !credentials?.password) return null;
+        // Suche User in DB
+        const user = await prisma.user.findUnique({ where: { email: credentials.email }, select: { id: true, name: true, email: true, image: true, hashedPassword: true } });
+        console.log("[LOGIN] User fetched:", user);
+        if (!user || !user.hashedPassword) {
+          console.log("[LOGIN] User not found or no hashedPassword");
+          return null;
         }
-        
-        console.log("API Route - Credentials login failed");
-        return null;
+        // Vergleiche Passwort
+        const valid = await bcrypt.compare(credentials.password, user.hashedPassword);
+        console.log("[LOGIN] bcrypt.compare result:", valid);
+        if (!valid) {
+          console.log("[LOGIN] Password invalid");
+          return null;
+        }
+        console.log("[LOGIN] Login successful for:", user.email);
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+        };
       }
     })
   ],

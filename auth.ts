@@ -1,7 +1,6 @@
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/db"
-import StackExchangeProvider from "@/lib/stackexchange-provider"
 import { Adapter } from "next-auth/adapters"
 import CredentialsProvider from "next-auth/providers/credentials"
 
@@ -9,21 +8,17 @@ import CredentialsProvider from "next-auth/providers/credentials"
 export const { auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
-    StackExchangeProvider({
-      clientId: process.env.STACK_EXCHANGE_CLIENT_ID || "a30ae3b8-d708-4861-8fb6-9b188945d43b",
-      clientSecret: process.env.STACK_EXCHANGE_CLIENT_SECRET || "pck_ehvs68v3cpqp2acwhe268dbyn8msn5kxe9pq3gvk5h448",
-    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        console.log("Client - Attempting credentials authorization with:", { username: credentials?.username });
+        console.log("Client - Attempting credentials authorization with:", { email: credentials?.email });
         
         // This is a simple demo auth - in production, you'd want to use a real authentication system
-        if (credentials?.username === "demo" && credentials?.password === "demo") {
+        if (credentials?.email === "demo@example.com" && credentials?.password === "demo") {
           console.log("Client - Credentials login successful");
           const user = {
             id: "demo-user",

@@ -17,7 +17,6 @@ import {
   FormMessage,
 } from "./ui/form"
 import { Input } from "./ui/input"
-import { StackIcon } from "lucide-react"
 
 const formSchema = z.object({
   email: z.string().email({
@@ -62,17 +61,6 @@ export function LoginForm() {
     } catch (error) {
       setError("An error occurred. Please try again.")
     } finally {
-      setIsLoading(false)
-    }
-  }
-
-  async function handleStackExchangeLogin() {
-    try {
-      setIsLoading(true)
-      setError("")
-      await signIn("stackexchange", { callbackUrl: "/chat" })
-    } catch (error) {
-      setError("An error occurred. Please try again.")
       setIsLoading(false)
     }
   }
@@ -125,16 +113,6 @@ export function LoginForm() {
           <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
         </div>
       </div>
-      <Button
-        variant="outline"
-        type="button"
-        className="w-full"
-        onClick={handleStackExchangeLogin}
-        disabled={isLoading}
-      >
-        <StackIcon className="mr-2 h-4 w-4" />
-        StackExchange
-      </Button>
     </div>
   )
 } 

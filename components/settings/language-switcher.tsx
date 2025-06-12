@@ -30,7 +30,7 @@ export function LanguageSwitcher({ onChange }: { onChange?: (lang: string) => vo
           <Globe className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="start" className="w-full">
         {LANGS.map(l => (
           <DropdownMenuItem key={l.code} onClick={() => setLang(l.code)}>
             {l.label}

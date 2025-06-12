@@ -16,7 +16,7 @@ export function ThemeSwitcher() {
           {theme === "system" && <Laptop className="ml-2 h-4 w-4" />}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="start" className="w-full">
         <DropdownMenuItem onClick={() => setTheme("light")}>🌞 Light</DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>🌙 Dark</DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>💻 System</DropdownMenuItem>

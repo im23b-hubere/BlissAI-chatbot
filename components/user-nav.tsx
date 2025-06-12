@@ -72,7 +72,7 @@ export function UserNav({ isExpanded = true, user }: UserNavProps) {
               {user.email}
             </span>
           </div>
-          <Avatar className="h-6 w-6">
+          <Avatar className="h-9 w-9">
             <AvatarImage src={user.image || ""} alt={user.name || "User avatar"} />
             <AvatarFallback>{userInitials}</AvatarFallback>
           </Avatar>
@@ -108,7 +108,7 @@ export function UserNav({ isExpanded = true, user }: UserNavProps) {
       onClick={() => router.push("/profile")}
       aria-label="Open user menu"
     >
-      <Avatar className="h-6 w-6">
+      <Avatar className="h-9 w-9">
         <AvatarImage src={user.image || ""} alt={user.name || "User avatar"} />
         <AvatarFallback>{userInitials}</AvatarFallback>
       </Avatar>

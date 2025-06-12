@@ -41,6 +41,10 @@ export interface ButtonProps
   asChild?: boolean
 }
 
+/**
+ * Button-Komponente. Für Buttons, die nur ein Icon enthalten, sollte ein passendes aria-label gesetzt werden,
+ * damit Screenreader-Nutzer die Funktion erkennen können.
+ */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"

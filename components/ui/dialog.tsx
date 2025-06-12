@@ -21,6 +21,10 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+/**
+ * Dialog-Komponente. DialogTitle und DialogDescription sollten immer verwendet werden,
+ * damit Screenreader den Dialog korrekt ankündigen können.
+ */
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
@@ -33,6 +37,8 @@ const DialogContent = React.forwardRef<
         "fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 rounded-xl",
         className
       )}
+      aria-modal="true"
+      role="dialog"
       {...props}
     />
   </DialogPortal>

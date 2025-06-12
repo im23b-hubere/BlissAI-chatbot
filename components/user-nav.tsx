@@ -48,8 +48,9 @@ export function UserNav({ isExpanded = true, user }: UserNavProps) {
         variant="ghost"
         className={cn("w-full justify-start gap-2", !isExpanded && "justify-center")}
         onClick={() => router.push("/login")}
+        aria-label="Sign in"
       >
-        <User className="h-4 w-4" />
+        <User className="h-4 w-4" aria-hidden="true" />
         {isExpanded && <span>Sign in</span>}
       </Button>
     )
@@ -58,7 +59,13 @@ export function UserNav({ isExpanded = true, user }: UserNavProps) {
   return isExpanded ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="justify-end gap-2 px-3 py-2">
+        <Button
+          variant="ghost"
+          className="justify-end gap-2 px-3 py-2"
+          aria-label="Open user menu"
+          aria-haspopup="menu"
+          aria-expanded="false"
+        >
           <div className="flex flex-col items-start text-sm text-right mr-2">
             <span className="font-medium">{user.name || "User"}</span>
             <span className="text-xs text-muted-foreground truncate max-w-[120px]">
@@ -66,7 +73,7 @@ export function UserNav({ isExpanded = true, user }: UserNavProps) {
             </span>
           </div>
           <Avatar className="h-6 w-6">
-            <AvatarImage src={user.image || ""} alt={user.name || ""} />
+            <AvatarImage src={user.image || ""} alt={user.name || "User avatar"} />
             <AvatarFallback>{userInitials}</AvatarFallback>
           </Avatar>
         </Button>
@@ -75,20 +82,20 @@ export function UserNav({ isExpanded = true, user }: UserNavProps) {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/profile">
-            <User className="mr-2 h-4 w-4" />
+          <Link href="/profile" aria-label="Profile">
+            <User className="mr-2 h-4 w-4" aria-hidden="true" />
             Profile
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/settings">
-            <Settings className="mr-2 h-4 w-4" />
+          <Link href="/settings" aria-label="Settings">
+            <Settings className="mr-2 h-4 w-4" aria-hidden="true" />
             Settings
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleSignOut}>
-          <LogOut className="mr-2 h-4 w-4" />
+        <DropdownMenuItem onClick={handleSignOut} aria-label="Log out">
+          <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -99,9 +106,10 @@ export function UserNav({ isExpanded = true, user }: UserNavProps) {
       size="icon"
       className="w-full flex justify-center"
       onClick={() => router.push("/profile")}
+      aria-label="Open user menu"
     >
       <Avatar className="h-6 w-6">
-        <AvatarImage src={user.image || ""} alt={user.name || ""} />
+        <AvatarImage src={user.image || ""} alt={user.name || "User avatar"} />
         <AvatarFallback>{userInitials}</AvatarFallback>
       </Avatar>
     </Button>

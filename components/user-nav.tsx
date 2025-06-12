@@ -58,17 +58,17 @@ export function UserNav({ isExpanded = true, user }: UserNavProps) {
   return isExpanded ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="w-full justify-start gap-2">
-          <Avatar className="h-6 w-6">
-            <AvatarImage src={user.image || ""} alt={user.name || ""} />
-            <AvatarFallback>{userInitials}</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col items-start text-sm">
+        <Button variant="ghost" className="justify-end gap-2 px-3 py-2">
+          <div className="flex flex-col items-start text-sm text-right mr-2">
             <span className="font-medium">{user.name || "User"}</span>
             <span className="text-xs text-muted-foreground truncate max-w-[120px]">
               {user.email}
             </span>
           </div>
+          <Avatar className="h-6 w-6">
+            <AvatarImage src={user.image || ""} alt={user.name || ""} />
+            <AvatarFallback>{userInitials}</AvatarFallback>
+          </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">

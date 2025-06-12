@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { Suspense, useEffect } from "react"
 import { ChatInterface } from "@/components/chat/chat-interface"
 import { Loader2 } from "lucide-react"
+import * as React from "react"
 
 interface ChatPageProps {
   params: {
@@ -40,7 +41,8 @@ function ChatPageContent({ chatId }: { chatId: string }) {
   )
 }
 
-export default function ChatPage({ params }: ChatPageProps) {
+export default function ChatPage({ params }: { params: { chatId: string } }) {
+  const { chatId } = params;
   return (
     <Suspense fallback={
       <div className="flex h-screen items-center justify-center">
@@ -50,7 +52,7 @@ export default function ChatPage({ params }: ChatPageProps) {
         </div>
       </div>
     }>
-      <ChatPageContent chatId={params.chatId} />
+      <ChatPageContent chatId={chatId} />
     </Suspense>
   )
 } 

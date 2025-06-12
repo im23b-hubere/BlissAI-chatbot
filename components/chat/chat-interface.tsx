@@ -201,8 +201,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <ScrollArea ref={scrollRef} className="flex-1 p-4">
+    <div className="flex flex-col h-full max-h-screen w-full">
+      <div className="flex-1 overflow-y-auto p-4" ref={scrollRef}>
         <div className="space-y-4 max-w-3xl mx-auto">
           <AnimatePresence initial={false}>
             {messages.length === 0 ? (
@@ -278,13 +278,12 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             </motion.div>
           )}
         </div>
-      </ScrollArea>
-
+      </div>
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.3 }}
-        className="border-t p-4 bg-background/80 backdrop-blur-sm"
+        className="border-t p-4 bg-background/80 backdrop-blur-sm w-full"
       >
         <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
           <div className="relative flex space-x-2">

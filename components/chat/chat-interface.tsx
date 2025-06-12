@@ -234,9 +234,6 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                   />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Start a conversation</h3>
-                <p className="text-muted-foreground max-w-sm">
-                  Send a message to start chatting with BlissAI. Ask questions, get creative, or just say hello!
-                </p>
                 <ExampleQuestionsTabs
                   onExampleClick={sendExampleMessage}
                   loadingIdx={exampleLoadingIdx}
@@ -296,7 +293,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
           )}
         </div>
       </div>
-      <div className="sticky bottom-0 left-0 w-full border-t bg-background/80 backdrop-blur-sm z-10 p-4 pb-6">
+      <div className="sticky bottom-0 left-0 w-full border-t bg-background/80 backdrop-blur-sm z-10 p-4 pb-16">
         <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
           <div className="relative flex space-x-2">
             <Input

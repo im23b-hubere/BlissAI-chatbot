@@ -49,12 +49,13 @@ export function ChatLayout({ chats: initialChats }: ChatLayoutProps) {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
-      <div
+      {/* Sidebar als Navigation */}
+      <nav
         className={cn(
           "bg-muted/40 w-64 border-r transition-all flex flex-col relative",
           open ? "block" : "hidden md:block md:w-20"
         )}
+        aria-label="Main navigation"
       >
         <div className="flex h-16 items-center justify-between px-4 border-b">
           <Link href="/" className={cn("flex items-center gap-2", !open && "md:hidden")}>
@@ -65,6 +66,7 @@ export function ChatLayout({ chats: initialChats }: ChatLayoutProps) {
             size="icon"
             className="md:hidden"
             onClick={toggleSidebar}
+            aria-label={open ? "Close sidebar" : "Open sidebar"}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -88,12 +90,13 @@ export function ChatLayout({ chats: initialChats }: ChatLayoutProps) {
               onClick={createNewChat}
               variant="outline"
               className={cn("w-full justify-start gap-2", !open && "md:justify-center md:px-2")}
+              aria-label="Start new chat"
             >
               <PlusIcon className="h-4 w-4" />
               <span className={cn("", !open && "md:hidden")}>New Chat</span>
             </Button>
           </div>
-          <nav className="grid gap-1 px-2 group">
+          <div className="grid gap-1 px-2 group">
             {chats.map((chat) => (
               <Link
                 key={chat.id}
@@ -103,6 +106,7 @@ export function ChatLayout({ chats: initialChats }: ChatLayoutProps) {
                   chatId === chat.id ? "bg-accent" : "transparent",
                   !open && "md:justify-center md:px-2"
                 )}
+                aria-current={chatId === chat.id ? "page" : undefined}
               >
                 <MessageSquare className="h-4 w-4" />
                 {open && (
@@ -115,12 +119,12 @@ export function ChatLayout({ chats: initialChats }: ChatLayoutProps) {
                 )}
               </Link>
             ))}
-          </nav>
+          </div>
         </div>
         <div className="mt-auto p-4 border-t">
           <UserNav isExpanded={open} />
         </div>
-      </div>
+      </nav>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
@@ -130,6 +134,7 @@ export function ChatLayout({ chats: initialChats }: ChatLayoutProps) {
             size="icon"
             className="md:hidden"
             onClick={toggleSidebar}
+            aria-label={open ? "Close sidebar" : "Open sidebar"}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

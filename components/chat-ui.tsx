@@ -157,7 +157,13 @@ export function ChatUI({ chatId }: ChatUIProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+      <div
+        className="flex-1 overflow-y-auto p-4 space-y-6"
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions text"
+        aria-label="Chat messages"
+      >
         {initialLoad ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-pulse text-muted-foreground">Loading messages...</div>
@@ -165,7 +171,7 @@ export function ChatUI({ chatId }: ChatUIProps) {
         ) : messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
             <div className="size-20 rounded-full bg-primary/10 flex items-center justify-center">
-              <Bot className="size-10 text-primary" />
+              <Bot className="size-10 text-primary" aria-hidden="true" />
             </div>
             <div className="space-y-2 max-w-md">
               <h3 className="text-xl font-bold">How can I help you today?</h3>
@@ -187,15 +193,16 @@ export function ChatUI({ chatId }: ChatUIProps) {
                   "flex items-start gap-4 p-4 rounded-lg",
                   message.role === "user" ? "bg-primary/10" : "bg-muted"
                 )}
+                aria-label={message.role === "user" ? "User message" : "AI message"}
               >
                 <div className={cn(
                   "size-8 rounded-full flex items-center justify-center",
                   message.role === "user" ? "bg-primary" : "bg-secondary"
                 )}>
                   {message.role === "user" ? (
-                    <User className="size-4 text-primary-foreground" />
+                    <User className="size-4 text-primary-foreground" aria-hidden="true" />
                   ) : (
-                    <Bot className="size-4 text-secondary-foreground" />
+                    <Bot className="size-4 text-secondary-foreground" aria-hidden="true" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0 space-y-1.5">
@@ -236,7 +243,7 @@ export function ChatUI({ chatId }: ChatUIProps) {
       </div>
       
       <div className="border-t p-4">
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex gap-2" aria-label="Send a message">
           <Textarea
             ref={inputRef}
             placeholder="Type your message here..."
@@ -245,14 +252,20 @@ export function ChatUI({ chatId }: ChatUIProps) {
             onKeyDown={handleKeyDown}
             className="min-h-10 max-h-40 resize-none"
             disabled={isLoading}
+            aria-label="Message input"
           />
-          <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
-            <SendIcon className="size-4" />
+          <Button
+            type="submit"
+            size="icon"
+            disabled={isLoading || !input.trim()}
+            aria-label="Send message"
+          >
+            <SendIcon className="size-4" aria-hidden="true" />
             <span className="sr-only">Send</span>
           </Button>
         </form>
         {isLoading && (
-          <div className="text-xs text-muted-foreground animate-pulse pt-2">
+          <div className="text-xs text-muted-foreground animate-pulse pt-2" aria-live="polite">
             BlissAI is thinking...
           </div>
         )}

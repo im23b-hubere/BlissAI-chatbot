@@ -12,6 +12,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism"
 import { SendIcon, User, Bot } from "lucide-react"
 import type { ReactMarkdownProps } from "react-markdown/lib/complex-types"
+import { ExampleQuestionsTabs } from "@/components/home-example-questions"
 
 // Define a type for code component props to avoid the 'inline' error
 type CodeComponentProps = {
@@ -34,6 +35,7 @@ export function ChatUI({ chatId }: ChatUIProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const [initialLoad, setInitialLoad] = useState(true)
+  const [exampleLoadingIdx, setExampleLoadingIdx] = useState<number | null>(null)
   
   // Fetch existing messages if a chatId is provided
   useEffect(() => {
@@ -155,6 +157,16 @@ export function ChatUI({ chatId }: ChatUIProps) {
     }
   }
 
+  // Handler für Beispiel-Fragen-Button im leeren Chat
+  async function sendExampleMessage(question: string, idx: number) {
+    setExampleLoadingIdx(idx)
+    try {
+      await sendMessage(question)
+    } finally {
+      setExampleLoadingIdx(null)
+    }
+  }
+
   return (
     <div className="flex flex-col h-full">
       <div
@@ -169,7 +181,7 @@ export function ChatUI({ chatId }: ChatUIProps) {
             <div className="animate-pulse text-muted-foreground">Loading messages...</div>
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
             <div className="size-20 rounded-full bg-primary/10 flex items-center justify-center">
               <Bot className="size-10 text-primary" aria-hidden="true" />
             </div>
@@ -179,6 +191,11 @@ export function ChatUI({ chatId }: ChatUIProps) {
                 Ask me anything - from simple questions to complex problems. I'm here to assist with information, creative ideas, and solutions.
               </p>
             </div>
+            <ExampleQuestionsTabs
+              onExampleClick={sendExampleMessage}
+              loadingIdx={exampleLoadingIdx}
+              className="mt-4"
+            />
           </div>
         ) : (
           <AnimatePresence initial={false}>

@@ -11,6 +11,7 @@ import { Message } from "@/components/chat/message"
 import { Message as MessageType } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
+import { ExampleQuestionsTabs } from "@/components/home-example-questions"
 
 interface ChatInterfaceProps {
   chatId: string
@@ -27,6 +28,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
   const router = useRouter()
+  const [exampleLoadingIdx, setExampleLoadingIdx] = useState<number | null>(null)
 
   // Reset state when chatId changes
   useEffect(() => {
@@ -151,6 +153,16 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     setRetryCount(prev => prev + 1)
   }
 
+  // Handler für Beispiel-Fragen-Button im leeren Chat
+  async function sendExampleMessage(question: string, idx: number) {
+    setExampleLoadingIdx(idx)
+    try {
+      await sendMessage(question)
+    } finally {
+      setExampleLoadingIdx(null)
+    }
+  }
+
   if (initialLoading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -225,6 +237,11 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                 <p className="text-muted-foreground max-w-sm">
                   Send a message to start chatting with BlissAI. Ask questions, get creative, or just say hello!
                 </p>
+                <ExampleQuestionsTabs
+                  onExampleClick={sendExampleMessage}
+                  loadingIdx={exampleLoadingIdx}
+                  className="mt-8"
+                />
               </motion.div>
             ) : (
               messages.map((message) => (

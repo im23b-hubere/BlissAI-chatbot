@@ -13,7 +13,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-screen min-h-screen overflow-hidden">
       {/* Sidebar */}
       <div
         className={cn(
@@ -25,7 +25,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* Main content */}
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col min-h-0">
         <header className="border-b bg-background px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Button
@@ -40,7 +40,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
           </div>
           {session?.user && <UserNav user={session.user} />}
         </header>
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 min-h-0 overflow-hidden">{children}</main>
       </div>
     </div>
   )

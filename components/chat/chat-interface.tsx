@@ -213,8 +213,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   }
 
   return (
-    <div className="flex flex-col h-full max-h-screen w-full">
-      <div className="flex-1 overflow-y-auto p-4" ref={scrollRef}>
+    <div className="flex flex-col h-screen min-h-screen w-full overflow-hidden">
+      <div className="flex-1 overflow-y-auto p-4" ref={scrollRef} style={{ minHeight: 0, maxHeight: '100vh' }}>
         <div className="space-y-4 max-w-3xl mx-auto">
           <AnimatePresence initial={false}>
             {messages.length === 0 ? (
@@ -296,12 +296,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
           )}
         </div>
       </div>
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.3 }}
-        className="border-t p-4 bg-background/80 backdrop-blur-sm w-full"
-      >
+      <div className="sticky bottom-0 left-0 w-full border-t bg-background/80 backdrop-blur-sm z-10 p-4 pb-6">
         <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
           <div className="relative flex space-x-2">
             <Input
@@ -325,15 +320,11 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
               )}
             </Button>
           </div>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
-            className="text-xs text-center text-muted-foreground mt-2"
-          >
+          <p className="text-xs text-center text-muted-foreground mt-2">
             Powered by BlissAI | Responses may take a moment
-          </motion.p>
+          </p>
         </form>
-      </motion.div>
+      </div>
     </div>
   )
 } 

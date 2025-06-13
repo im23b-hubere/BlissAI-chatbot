@@ -108,9 +108,9 @@ code::selection {
 .logo-img {
   transition: filter 0.3s;
   background: none;
-  mix-blend-mode: multiply;
   box-shadow: none;
 }
 .dark .logo-img {
-  filter: invert(1) grayscale(1) brightness(1.2) contrast(1.1);
+  filter: invert(1) brightness(2.5) contrast(1.2);
+  box-shadow: 0 0 24px 4px rgba(255,255,255,0.10);
 } 

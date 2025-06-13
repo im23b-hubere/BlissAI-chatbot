@@ -98,33 +98,42 @@ export function ExampleQuestionsTabs({ onExampleClick, loadingIdx, className }: 
 }
 
 // Für die Startseite: eigene Handler-Logik
-export function HomeExampleQuestions() {
+export function HomeExampleQuestions({ onDemoAnswer, demoLoading }: {
+  onDemoAnswer?: (question: string) => Promise<void>,
+  demoLoading?: boolean
+} = {}) {
   const [loadingIdx, setLoadingIdx] = useState<number | null>(null)
   const router = useRouter()
 
   async function handleExampleClick(question: string, idx: number) {
-    setLoadingIdx(idx)
-    try {
-      // 1. Neue Chat-Session anlegen
-      const chatRes = await fetch("/api/chats", { method: "POST" })
-      if (!chatRes.ok) throw new Error("Failed to create chat")
-      const chatData = await chatRes.json()
-      const chatId = chatData.chat.id
-      // 2. Frage als erste Nachricht senden
-      const msgRes = await fetch(`/api/chats/${chatId}/messages`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: question }),
-      })
-      if (!msgRes.ok) throw new Error("Failed to send message")
-      // 3. Redirect zum neuen Chat
-      router.push(`/chat/${chatId}`)
-    } catch (e) {
-      alert("Etwas ist schiefgelaufen. Bitte versuche es erneut.")
-    } finally {
+    if (onDemoAnswer) {
+      setLoadingIdx(idx)
+      await onDemoAnswer(question)
       setLoadingIdx(null)
+    } else {
+      setLoadingIdx(idx)
+      try {
+        // 1. Neue Chat-Session anlegen
+        const chatRes = await fetch("/api/chats", { method: "POST" })
+        if (!chatRes.ok) throw new Error("Failed to create chat")
+        const chatData = await chatRes.json()
+        const chatId = chatData.chat.id
+        // 2. Frage als erste Nachricht senden
+        const msgRes = await fetch(`/api/chats/${chatId}/messages`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: question }),
+        })
+        if (!msgRes.ok) throw new Error("Failed to send message")
+        // 3. Redirect zum neuen Chat
+        router.push(`/chat/${chatId}`)
+      } catch (e) {
+        alert("Etwas ist schiefgelaufen. Bitte versuche es erneut.")
+      } finally {
+        setLoadingIdx(null)
+      }
     }
   }
 
-  return <ExampleQuestionsTabs onExampleClick={handleExampleClick} loadingIdx={loadingIdx} />
+  return <ExampleQuestionsTabs onExampleClick={handleExampleClick} loadingIdx={demoLoading ? -1 : loadingIdx} />
 } 

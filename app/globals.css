@@ -73,4 +73,44 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Bessere Selection für Codeblöcke im Darkmode */
+.dark pre code::selection,
+.dark pre::selection,
+.dark code::selection {
+  background: #264F78 !important; /* VSCode-Selection-Blau */
+  color: #fff !important;
+}
+
+/* Bessere Selection für Codeblöcke im Lightmode */
+pre code::selection,
+pre::selection,
+code::selection {
+  background: #b3d4fc !important; /* Helles Blau */
+  color: #222 !important;
+}
+
+/* --- Selection-Fix für Codeblöcke (immer ganz am Ende einfügen!) --- */
+.dark pre code::selection,
+.dark pre::selection,
+.dark code::selection {
+  background: #264F78 !important;
+  color: #fff !important;
+}
+pre code::selection,
+pre::selection,
+code::selection {
+  background: #b3d4fc !important;
+  color: #222 !important;
+}
+
+.logo-img {
+  transition: filter 0.3s;
+  background: none;
+  mix-blend-mode: multiply;
+  box-shadow: none;
+}
+.dark .logo-img {
+  filter: invert(1) grayscale(1) brightness(1.2) contrast(1.1);
 } 

@@ -8,6 +8,8 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { format } from "date-fns"
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"
 
 interface MessageProps {
   message: MessageType
@@ -63,7 +65,41 @@ export function Message({ message }: MessageProps) {
         </div>
         
         <div className="prose prose-neutral dark:prose-invert max-w-full">
-          <ReactMarkdown>
+          <ReactMarkdown
+            components={{
+              code({ node, inline, className, children, ...props }: any) {
+                const match = /language-(\w+)/.exec(className || "");
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    style={vscDarkPlus}
+                    language={match[1]}
+                    PreTag="div"
+                    customStyle={{
+                      borderRadius: "1rem",
+                      fontSize: "0.95em",
+                      boxShadow: "0 2px 16px rgba(0,0,0,0.04)",
+                      margin: "0.5rem 0"
+                    } as React.CSSProperties}
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, "")}
+                  </SyntaxHighlighter>
+                ) : (
+                  <code
+                    style={{
+                      background: "#f4f4f4",
+                      borderRadius: "6px",
+                      padding: "2px 6px",
+                      fontSize: "0.95em"
+                    } as React.CSSProperties}
+                    {...props}
+                  >
+                    {children}
+                  </code>
+                );
+              }
+            }}
+          >
             {message.content}
           </ReactMarkdown>
         </div>

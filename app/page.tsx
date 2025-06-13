@@ -11,6 +11,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"
 import { Copy, CheckCheck } from "lucide-react"
 import { useState as useCopyState } from "react"
+import { motion } from "framer-motion"
 
 export default function Home() {
   const { data: session, status } = useSession()
@@ -38,20 +39,32 @@ export default function Home() {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center px-2 sm:px-4 py-8 sm:py-12 bg-gradient-to-br from-background to-muted/50 relative overflow-x-hidden">
         {/* Top Nav */}
-        <nav className="absolute top-0 right-0 p-3 sm:p-6 flex gap-2 sm:gap-4 z-10">
-          <Link href="/login" className="font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-background/80 shadow-md hover:bg-accent/60 transition-all border border-border focus-visible:ring-2 focus-visible:ring-primary focus:outline-none">Login</Link>
-          <Link href="/sign-up" className="font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-primary text-primary-foreground shadow-md hover:bg-primary/90 transition-all focus-visible:ring-2 focus-visible:ring-primary focus:outline-none">Sign Up</Link>
+        <nav className="z-20 w-full flex justify-end">
+          <div className="fixed top-2 left-0 right-0 mx-auto w-[98vw] max-w-xs sm:static sm:w-auto sm:max-w-none flex gap-2 sm:gap-4 items-center justify-end sm:justify-end px-2 py-2 sm:p-6 bg-background/70 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none rounded-2xl sm:rounded-none shadow-lg sm:shadow-none border border-border/60 sm:border-none transition-all duration-300" style={{boxShadow: '0 4px 24px 0 rgba(31,38,135,0.08)'}}>
+            <Link href="/login" className="font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-background/80 shadow-md hover:bg-accent/60 transition-all border border-border focus-visible:ring-2 focus-visible:ring-primary focus:outline-none">Login</Link>
+            <Link href="/sign-up" className="font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-primary text-primary-foreground shadow-md hover:bg-primary/90 transition-all focus-visible:ring-2 focus-visible:ring-primary focus:outline-none">Sign Up</Link>
+          </div>
         </nav>
         {/* Logo */}
-        <div className="flex flex-col items-center w-full mt-20 sm:mt-0">
+        <motion.div
+          className="flex flex-col items-center w-full mt-20 sm:mt-0"
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
           <Image src="/Logo_klein.svg" alt="BlissAI Logo" width={90} height={90} className="mb-6 logo-img drop-shadow-lg" priority />
-        </div>
+        </motion.div>
         {/* Main Content (no card) */}
         <section className="w-full max-w-2xl flex flex-col items-center animate-fade-in pb-8 sm:pb-12 px-1 sm:px-0">
-          <div className="mb-6 sm:mb-8 text-center">
+          <motion.div
+            className="mb-6 sm:mb-8 text-center"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+          >
             <h1 className="text-3xl xs:text-4xl md:text-5xl font-extrabold mb-2 tracking-tight leading-tight drop-shadow-sm">Willkommen bei BlissAI</h1>
             <p className="text-base xs:text-lg text-muted-foreground font-medium">Wähle eine Kategorie und teste BlissAI direkt mit einer Beispiel-Frage!</p>
-          </div>
+          </motion.div>
           <div className="w-full">
             <HomeExampleQuestions 
               onDemoAnswer={async (question: string) => {

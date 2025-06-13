@@ -214,18 +214,18 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-screen min-h-screen w-full overflow-hidden">
-      <div className="flex-1 overflow-y-auto p-4" ref={scrollRef} style={{ minHeight: 0, maxHeight: '100vh' }}>
-        <div className="space-y-4 max-w-3xl mx-auto">
+      <div className="flex-1 overflow-y-auto p-2 sm:p-4" ref={scrollRef} style={{ minHeight: 0, maxHeight: '100vh' }}>
+        <div className="space-y-3 sm:space-y-4 max-w-full sm:max-w-3xl mx-auto">
           <AnimatePresence initial={false}>
             {messages.length === 0 ? (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="flex h-full flex-col items-center justify-center text-center p-10 my-16"
+                className="flex h-full flex-col items-center justify-center text-center p-6 sm:p-10 my-8 sm:my-16"
               >
                 <div className="relative mb-4">
-                  <Bot className="h-12 w-12 text-primary" />
+                  <Bot className="h-8 w-8 sm:h-12 sm:w-12 text-primary" />
                   <motion.div 
                     className="absolute inset-0 rounded-full bg-primary/10"
                     initial={{ scale: 0.8, opacity: 0 }}
@@ -233,11 +233,11 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                     transition={{ duration: 3, repeat: Infinity, repeatType: "loop" }}
                   />
                 </div>
-                <h3 className="text-xl font-bold mb-2">Start a conversation</h3>
+                <h3 className="text-lg sm:text-xl font-bold mb-2">Start a conversation</h3>
                 <ExampleQuestionsTabs
                   onExampleClick={sendExampleMessage}
                   loadingIdx={exampleLoadingIdx}
-                  className="mt-8"
+                  className="mt-4"
                 />
               </motion.div>
             ) : (
@@ -248,8 +248,17 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.2 }}
+                  className="flex items-start gap-2 sm:gap-4 p-2 sm:p-4 rounded-xl bg-muted/60"
                 >
-                  <Message message={message} />
+                  <div className="shrink-0 size-6 sm:size-8 rounded-full flex items-center justify-center bg-secondary">
+                    <Bot className="size-3 sm:size-4 text-secondary-foreground" aria-hidden="true" />
+                  </div>
+                  <div className="flex-1 min-w-0 space-y-1.5">
+                    <p className="font-medium text-xs sm:text-sm">BlissAI</p>
+                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-full">
+                      <Message message={message} />
+                    </div>
+                  </div>
                 </motion.div>
               ))
             )}
@@ -258,7 +267,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center space-x-2 text-muted-foreground bg-muted/50 p-3 rounded-lg"
+              className="flex items-center space-x-2 text-muted-foreground bg-muted/50 p-2 sm:p-3 rounded-lg"
             >
               <div className="relative">
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -269,17 +278,17 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
               </div>
-              <span>BlissAI is thinking...</span>
+              <span className="text-xs sm:text-sm">BlissAI is thinking...</span>
             </motion.div>
           )}
           {error && !initialLoading && messages.length > 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="p-3 rounded-md bg-destructive/10 text-destructive flex items-center gap-2"
+              className="p-2 sm:p-3 rounded-md bg-destructive/10 text-destructive flex items-center gap-2"
             >
               <AlertCircle className="h-4 w-4 flex-shrink-0" />
-              <div className="flex-1">{error}</div>
+              <div className="flex-1 text-xs sm:text-sm">{error}</div>
               <Button 
                 size="sm" 
                 variant="ghost" 
@@ -293,21 +302,21 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
           )}
         </div>
       </div>
-      <div className="sticky bottom-0 left-0 w-full border-t bg-background/80 backdrop-blur-sm z-10 p-4 pb-16">
-        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
+      <div className="sticky bottom-0 left-0 w-full border-t bg-background/90 backdrop-blur-sm z-10 p-2 sm:p-4 pb-14 sm:pb-16">
+        <form onSubmit={handleSubmit} className="max-w-full sm:max-w-3xl mx-auto">
           <div className="relative flex space-x-2">
             <Input
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 bg-background pl-4 pr-10 py-6 shadow-sm transition-all duration-200 focus-visible:ring-2"
+              className="flex-1 bg-background pl-3 pr-8 py-4 sm:pl-4 sm:pr-10 sm:py-6 shadow-sm transition-all duration-200 focus-visible:ring-2 text-sm sm:text-base"
               disabled={isLoading}
             />
             <Button 
               type="submit" 
               size="icon"
-              className="transition-all duration-300 hover:scale-105"
+              className="transition-all duration-300 hover:scale-105 h-10 w-10 sm:h-12 sm:w-12"
               disabled={isLoading || !input.trim()}
             >
               {isLoading ? (

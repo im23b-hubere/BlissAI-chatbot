@@ -168,33 +168,33 @@ export function ChatUI({ chatId }: ChatUIProps) {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-full">
       <div
-        className="flex-1 overflow-y-auto p-4 space-y-6"
+        className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-4 sm:space-y-6"
         role="log"
         aria-live="polite"
         aria-relevant="additions text"
         aria-label="Chat messages"
       >
         {initialLoad ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="animate-pulse text-muted-foreground">Loading messages...</div>
+          <div className="flex items-center justify-center h-full min-h-[200px]">
+            <div className="animate-pulse text-muted-foreground text-base">Loading messages...</div>
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-            <div className="size-20 rounded-full bg-primary/10 flex items-center justify-center">
-              <Bot className="size-10 text-primary" aria-hidden="true" />
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-4 sm:space-y-6">
+            <div className="size-16 sm:size-20 rounded-full bg-primary/10 flex items-center justify-center">
+              <Bot className="size-8 sm:size-10 text-primary" aria-hidden="true" />
             </div>
-            <div className="space-y-2 max-w-md">
-              <h3 className="text-xl font-bold">How can I help you today?</h3>
-              <p className="text-muted-foreground">
+            <div className="space-y-1 max-w-xs sm:max-w-md">
+              <h3 className="text-lg sm:text-xl font-bold">How can I help you today?</h3>
+              <p className="text-muted-foreground text-sm sm:text-base">
                 Ask me anything - from simple questions to complex problems. I'm here to assist with information, creative ideas, and solutions.
               </p>
             </div>
             <ExampleQuestionsTabs
               onExampleClick={sendExampleMessage}
               loadingIdx={exampleLoadingIdx}
-              className="mt-4"
+              className="mt-2 sm:mt-4"
             />
           </div>
         ) : (
@@ -207,26 +207,26 @@ export function ChatUI({ chatId }: ChatUIProps) {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
                 className={cn(
-                  "flex items-start gap-4 p-4 rounded-lg",
+                  "flex items-start gap-2 sm:gap-4 p-2 sm:p-4 rounded-xl",
                   message.role === "user" ? "bg-primary/10" : "bg-muted"
                 )}
                 aria-label={message.role === "user" ? "User message" : "AI message"}
               >
                 <div className={cn(
-                  "size-8 rounded-full flex items-center justify-center",
+                  "size-6 sm:size-8 rounded-full flex items-center justify-center",
                   message.role === "user" ? "bg-primary" : "bg-secondary"
                 )}>
                   {message.role === "user" ? (
-                    <User className="size-4 text-primary-foreground" aria-hidden="true" />
+                    <User className="size-3 sm:size-4 text-primary-foreground" aria-hidden="true" />
                   ) : (
-                    <Bot className="size-4 text-secondary-foreground" aria-hidden="true" />
+                    <Bot className="size-3 sm:size-4 text-secondary-foreground" aria-hidden="true" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0 space-y-1.5">
-                  <p className="font-medium text-sm">
+                  <p className="font-medium text-xs sm:text-sm">
                     {message.role === "user" ? "You" : "BlissAI"}
                   </p>
-                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                  <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-full">
                     <ReactMarkdown
                       components={{
                         code: ({ node, inline, className, children, ...props }: CodeComponentProps) => {
@@ -258,8 +258,7 @@ export function ChatUI({ chatId }: ChatUIProps) {
         )}
         <div ref={messagesEndRef} />
       </div>
-      
-      <div className="border-t p-4">
+      <div className="border-t p-2 sm:p-4 bg-background sticky bottom-0 left-0 w-full z-10">
         <form onSubmit={handleSubmit} className="flex gap-2" aria-label="Send a message">
           <Textarea
             ref={inputRef}
@@ -267,13 +266,14 @@ export function ChatUI({ chatId }: ChatUIProps) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="min-h-10 max-h-40 resize-none"
+            className="min-h-10 max-h-32 resize-none text-sm sm:text-base"
             disabled={isLoading}
             aria-label="Message input"
           />
           <Button
             type="submit"
             size="icon"
+            className="h-10 w-10 sm:h-12 sm:w-12"
             disabled={isLoading || !input.trim()}
             aria-label="Send message"
           >

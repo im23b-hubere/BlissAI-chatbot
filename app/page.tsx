@@ -36,7 +36,7 @@ export default function Home() {
 
   if (status === "unauthenticated") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-4 py-12 bg-background">
+      <main className="flex min-h-screen flex-col items-center justify-center px-4 py-12 bg-gradient-to-br from-background to-muted/50">
         {/* Top Nav */}
         <div className="absolute top-0 right-0 p-6 flex gap-4 z-10">
           <Link href="/login" className="font-semibold px-4 py-2 rounded-xl bg-background/80 shadow hover:bg-accent/60 transition-all border border-border">Login</Link>
@@ -44,8 +44,8 @@ export default function Home() {
         </div>
         {/* Logo */}
         <Image src="/Logo_klein.svg" alt="BlissAI Logo" width={90} height={90} className="mb-6 logo-img" />
-        {/* Main Card */}
-        <div className="w-full max-w-2xl bg-background/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 pb-12 flex flex-col items-center animate-fade-in">
+        {/* Main Content (no card) */}
+        <div className="w-full max-w-2xl flex flex-col items-center animate-fade-in pb-12">
           <div className="mb-8 text-center">
             <h1 className="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight">Willkommen bei BlissAI</h1>
             <p className="text-lg text-muted-foreground font-medium">Wähle eine Kategorie und teste BlissAI direkt mit einer Beispiel-Frage!</p>
@@ -74,7 +74,7 @@ export default function Home() {
           />
           {/* Demo-Antwort anzeigen */}
           {demoLoading && (
-            <div className="mt-8 w-full flex justify-center animate-pulse text-muted-foreground">BlissAI denkt ...</div>
+            <div className="mt-16 w-full flex justify-center animate-pulse text-muted-foreground">BlissAI denkt ...</div>
           )}
           {demoError && (
             <div className="mt-8 w-full bg-destructive/10 text-destructive text-center p-4 rounded-xl">{demoError}</div>

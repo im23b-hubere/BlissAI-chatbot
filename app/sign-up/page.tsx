@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Loader2 } from "lucide-react"
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -74,7 +74,16 @@ export default function SignUpPage() {
             </div>
             {error && <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">{error}</div>}
             {success && <div className="bg-success/10 text-success text-sm p-3 rounded-md">{success}</div>}
-            <Button className="w-full" type="submit" disabled={isLoading}>{isLoading ? "Creating account..." : "Sign Up"}</Button>
+            <Button className="w-full" type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <Loader2 className="animate-spin mr-2 h-5 w-5 text-primary" />
+                  Creating account...
+                </span>
+              ) : (
+                "Sign Up"
+              )}
+            </Button>
           </form>
         </div>
       </div>

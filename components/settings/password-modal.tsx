@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 
 export function PasswordChangeModal({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const [form, setForm] = useState({ old: "", neu: "", neu2: "" });
@@ -89,7 +90,16 @@ export function PasswordChangeModal({ open, onOpenChange }: { open: boolean; onO
           {success && <div className="bg-success/10 text-success text-sm p-2 rounded-md">{success}</div>}
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} disabled={loading}>Abbrechen</Button>
-            <Button type="submit" disabled={loading}>{loading ? "Ändere..." : "Passwort ändern"}</Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <Loader2 className="animate-spin mr-2 h-5 w-5 text-primary" />
+                  Ändere...
+                </span>
+              ) : (
+                "Passwort ändern"
+              )}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

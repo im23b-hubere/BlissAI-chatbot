@@ -6,6 +6,7 @@ import * as z from "zod"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { Loader2 } from "lucide-react"
 
 import { Button } from "./ui/button"
 import {
@@ -101,7 +102,14 @@ export function LoginForm() {
             )}
           />
           <Button className="w-full" type="submit" disabled={isLoading}>
-            {isLoading ? "Logging in..." : "Login"}
+            {isLoading ? (
+              <span className="flex items-center justify-center">
+                <Loader2 className="animate-spin mr-2 h-5 w-5 text-primary" />
+                Logging in...
+              </span>
+            ) : (
+              "Login"
+            )}
           </Button>
         </form>
       </Form>

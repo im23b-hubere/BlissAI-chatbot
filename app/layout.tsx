@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SessionProvider } from "@/components/session-provider"
 import { Toaster } from "@/components/ui/toaster"
+import FooterVisibility from "@/components/FooterVisibility"
+import { usePathname } from "next/navigation"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -18,6 +20,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+  const showFooter = !pathname.startsWith("/chat");
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(
@@ -32,6 +36,7 @@ export default function RootLayout({
         >
           <SessionProvider>
             {children}
+            <FooterVisibility />
           </SessionProvider>
           <Toaster />
         </ThemeProvider>

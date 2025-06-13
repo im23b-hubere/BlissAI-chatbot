@@ -113,4 +113,17 @@ code::selection {
 .dark .logo-img {
   filter: invert(1) brightness(2.5) contrast(1.2);
   box-shadow: 0 0 24px 4px rgba(255,255,255,0.10);
+}
+
+.prose code {
+  background: #23272e !important;
+  color: #e6e6e6 !important;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 0.95em;
+}
+
+.dark .prose code {
+  background: #23272e !important;
+  color: #e6e6e6 !important;
 } 

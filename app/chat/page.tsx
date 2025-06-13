@@ -18,21 +18,11 @@ function ChatPageContent() {
   // If we're on the base chat page, check if we need to create a new chat or redirect to the most recent one
   useEffect(() => {
     if (status === "authenticated") {
-      // Fetch the most recent chat or create a new one
-      fetch("/api/chats")
+      // Immer neuen Chat erstellen und weiterleiten
+      fetch("/api/chats", { method: "POST" })
         .then((res) => res.json())
         .then((data) => {
-          if (data.chats && data.chats.length > 0) {
-            // Redirect to the most recent chat
-            router.push(`/chat/${data.chats[0].id}`)
-          } else {
-            // Create a new chat
-            fetch("/api/chats", { method: "POST" })
-              .then((res) => res.json())
-              .then((data) => {
-                router.push(`/chat/${data.chat.id}`)
-              })
-          }
+          router.push(`/chat/${data.chat.id}`)
         })
     }
   }, [router, status])

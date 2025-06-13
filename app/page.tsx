@@ -45,7 +45,7 @@ export default function Home() {
         {/* Logo */}
         <Image src="/Logo_klein.svg" alt="BlissAI Logo" width={90} height={90} className="mb-6 logo-img" />
         {/* Main Card */}
-        <div className="w-full max-w-2xl bg-background/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 flex flex-col items-center animate-fade-in">
+        <div className="w-full max-w-2xl bg-background/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 pb-12 flex flex-col items-center animate-fade-in">
           <div className="mb-8 text-center">
             <h1 className="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight">Willkommen bei BlissAI</h1>
             <p className="text-lg text-muted-foreground font-medium">Wähle eine Kategorie und teste BlissAI direkt mit einer Beispiel-Frage!</p>

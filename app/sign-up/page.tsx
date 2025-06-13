@@ -3,6 +3,8 @@ import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -47,6 +49,10 @@ export default function SignUpPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background to-muted/50 p-4">
+      {/* Back Button */}
+      <Link href="/" className="absolute top-6 left-6 z-10 bg-background/80 rounded-full shadow p-2 hover:bg-accent transition-colors" aria-label="Zurück zur Startseite">
+        <ArrowLeft className="h-6 w-6" />
+      </Link>
       <div className="relative w-full max-w-md mx-auto">
         <div className="bg-background/80 rounded-2xl shadow-xl p-8 flex flex-col items-center gap-4 border border-border">
           <h1 className="text-2xl font-bold mb-1 text-center">Create your account</h1>

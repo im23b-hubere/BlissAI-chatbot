@@ -59,12 +59,12 @@ export function ExampleQuestionsTabs({ onExampleClick, loadingIdx, className }: 
   return (
     <div className={className || "w-full max-w-xl mx-auto animate-fade-in"}>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="mb-6 flex justify-center gap-2 bg-background/60 backdrop-blur rounded-2xl shadow-lg">
+        <TabsList className="mb-6 flex flex-wrap justify-center gap-2 bg-background/60 backdrop-blur rounded-2xl shadow-lg px-2 py-2 sm:px-4 sm:py-3 max-w-full">
           {EXAMPLES.map((cat) => (
             <TabsTrigger
               key={cat.key}
               value={cat.key}
-              className="data-[state=active]:bg-primary/90 data-[state=active]:text-primary-foreground rounded-xl px-5 py-2 text-base font-semibold transition-all"
+              className="data-[state=active]:bg-primary/90 data-[state=active]:text-primary-foreground rounded-xl px-3 py-1.5 text-sm font-semibold transition-all min-w-[70px] text-center focus-visible:ring-2 focus-visible:ring-primary xs:px-4 xs:py-2 xs:text-base"
             >
               {cat.label}
             </TabsTrigger>
@@ -72,28 +72,29 @@ export function ExampleQuestionsTabs({ onExampleClick, loadingIdx, className }: 
         </TabsList>
         {EXAMPLES.map((cat) => (
           <TabsContent key={cat.key} value={cat.key} className="">
-            <div className="flex flex-col gap-4 h-[240px] pb-6">
+            <div className="flex flex-col gap-3 xs:gap-4 h-auto pb-2 xs:pb-4 sm:pb-6">
               {cat.questions.map((q, idx) => (
-                <Button
-                  key={q}
-                  variant="outline"
-                  className="justify-start w-full text-left px-6 py-4 rounded-2xl shadow-sm bg-background/80 hover:bg-accent/60 transition-all text-base font-medium flex items-center gap-3 focus-visible:ring-2 focus-visible:ring-primary min-h-[56px]"
-                  onClick={() => onExampleClick(q, idx)}
-                  disabled={loadingIdx === idx}
-                  tabIndex={0}
-                  aria-label={`Start chat: ${q}`}
-                >
-                  {loadingIdx === idx ? (
-                    <Loader2 className="animate-spin mr-2 h-5 w-5 text-primary" />
-                  ) : (
-                    <span className="inline-block w-5 h-5 rounded-full bg-primary/10 mr-2" />
-                  )}
-                  {q}
-                </Button>
+                <div key={q} className="w-full">
+                  <Button
+                    variant="outline"
+                    className="w-full text-left px-2 py-2 xs:px-4 xs:py-4 rounded-2xl shadow-md bg-background/80 hover:bg-accent/60 transition-all text-sm xs:text-base font-medium flex items-center gap-2 xs:gap-3 focus-visible:ring-2 focus-visible:ring-primary min-h-[40px] xs:min-h-[56px] whitespace-pre-line break-words overflow-hidden"
+                    onClick={() => onExampleClick(q, idx)}
+                    disabled={loadingIdx === idx}
+                    tabIndex={0}
+                    aria-label={`Start chat: ${q}`}
+                  >
+                    {loadingIdx === idx ? (
+                      <Loader2 className="animate-spin mr-2 h-4 w-4 xs:h-5 xs:w-5 text-primary" />
+                    ) : (
+                      <span className="inline-block w-4 h-4 xs:w-5 xs:h-5 rounded-full bg-primary/10 mr-2" />
+                    )}
+                    <span className="flex-1 break-words">{q}</span>
+                  </Button>
+                </div>
               ))}
               {/* Platzhalter für gleichbleibende Höhe */}
               {Array.from({ length: 4 - cat.questions.length }).map((_, i) => (
-                <div key={"placeholder-" + i} className="w-full min-h-[56px] opacity-0 pointer-events-none select-none" />
+                <div key={"placeholder-" + i} className="w-full min-h-[40px] xs:min-h-[56px] opacity-0 pointer-events-none select-none" />
               ))}
             </div>
           </TabsContent>

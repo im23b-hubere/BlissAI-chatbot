@@ -3,61 +3,18 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/settings/theme-switcher";
-import { LanguageSwitcher } from "@/components/settings/language-switcher";
 import { PasswordChangeModal } from "@/components/settings/password-modal";
 import { useState } from "react";
-
-type Lang = 'de' | 'en';
-const translations: Record<Lang, { [key: string]: string }> = {
-  de: {
-    settings: "Einstellungen",
-    manage: "Verwalte deine Kontoeinstellungen",
-    name: "Name:",
-    email: "E-Mail:",
-    theme: "Theme",
-    language: "Sprache",
-    password: "Passwort ändern",
-    changePassword: "Passwort ändern",
-    back: "Zurück zum Chat",
-    notLoggedIn: "Nicht eingeloggt.",
-    toLogin: "Zum Login",
-    loading: "Lädt Einstellungen..."
-  },
-  en: {
-    settings: "Settings",
-    manage: "Manage your account settings",
-    name: "Name:",
-    email: "Email:",
-    theme: "Theme",
-    language: "Language",
-    password: "Change password",
-    changePassword: "Change password",
-    back: "Back to chat",
-    notLoggedIn: "Not logged in.",
-    toLogin: "To login",
-    loading: "Loading settings..."
-  }
-};
-
-function getLang(): Lang {
-  if (typeof window !== "undefined") {
-    const stored = localStorage.getItem("lang");
-    if (stored === "en" || stored === "de") return stored;
-  }
-  return "de";
-}
 
 export default function SettingsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [pwModal, setPwModal] = useState(false);
-  const lang: Lang = typeof window !== "undefined" ? getLang() : "de";
-  const t = translations[lang];
 
   if (status === "loading") {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">{t.loading}</div>
+        <div className="animate-pulse text-muted-foreground">Loading settings...</div>
       </div>
     );
   }
@@ -66,7 +23,7 @@ export default function SettingsPage() {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="bg-destructive/10 text-destructive text-sm p-4 rounded-md">
-          {t.notLoggedIn} <Button variant="link" onClick={() => router.push("/login")}>{t.toLogin}</Button>
+          Not logged in. <Button variant="link" onClick={() => router.push("/login")}>To login</Button>
         </div>
       </div>
     );
@@ -78,33 +35,29 @@ export default function SettingsPage() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background to-muted/50 p-4">
       <div className="w-full max-w-md mx-auto bg-background/80 rounded-2xl shadow-xl p-8 flex flex-col gap-6 border border-border">
         <div className="mb-4">
-          <h1 className="text-2xl font-bold mb-1">{t.settings}</h1>
-          <p className="text-muted-foreground text-sm">{t.manage}</p>
+          <h1 className="text-2xl font-bold mb-1">Settings</h1>
+          <p className="text-muted-foreground text-sm">Manage your account settings</p>
         </div>
         <div className="space-y-2">
           <div>
-            <span className="font-medium">{t.name}</span> {name || "User"}
+            <span className="font-medium">Name:</span> {name || "User"}
           </div>
           <div>
-            <span className="font-medium">{t.email}</span> {email}
+            <span className="font-medium">Email:</span> {email}
           </div>
         </div>
         <div className="mt-6 space-y-4">
           <div className="bg-muted/40 rounded-lg p-4 flex flex-col gap-2">
-            <span className="font-semibold">{t.theme}</span>
+            <span className="font-semibold">Theme</span>
             <ThemeSwitcher />
           </div>
           <div className="bg-muted/40 rounded-lg p-4 flex flex-col gap-2">
-            <span className="font-semibold">{t.language}</span>
-            <LanguageSwitcher />
-          </div>
-          <div className="bg-muted/40 rounded-lg p-4 flex flex-col gap-2">
-            <span className="font-semibold">{t.password}</span>
-            <Button variant="outline" onClick={() => setPwModal(true)} className="w-fit">{t.changePassword}</Button>
+            <span className="font-semibold">Change password</span>
+            <Button variant="outline" onClick={() => setPwModal(true)} className="w-fit">Change password</Button>
             <PasswordChangeModal open={pwModal} onOpenChange={setPwModal} />
           </div>
         </div>
-        <Button onClick={() => router.push("/chat")} className="mt-4 w-full">{t.back}</Button>
+        <Button onClick={() => router.push("/chat")} className="mt-4 w-full">Back to chat</Button>
       </div>
     </div>
   );

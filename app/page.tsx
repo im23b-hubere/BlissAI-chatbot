@@ -36,53 +36,57 @@ export default function Home() {
 
   if (status === "unauthenticated") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-4 py-12 bg-gradient-to-br from-background to-muted/50">
+      <main className="flex min-h-screen flex-col items-center justify-center px-2 sm:px-4 py-8 sm:py-12 bg-gradient-to-br from-background to-muted/50 relative overflow-x-hidden">
         {/* Top Nav */}
-        <div className="absolute top-0 right-0 p-6 flex gap-4 z-10">
-          <Link href="/login" className="font-semibold px-4 py-2 rounded-xl bg-background/80 shadow hover:bg-accent/60 transition-all border border-border">Login</Link>
-          <Link href="/sign-up" className="font-semibold px-4 py-2 rounded-xl bg-primary text-primary-foreground shadow hover:bg-primary/90 transition-all">Sign Up</Link>
-        </div>
+        <nav className="absolute top-0 right-0 p-3 sm:p-6 flex gap-2 sm:gap-4 z-10">
+          <Link href="/login" className="font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-background/80 shadow-md hover:bg-accent/60 transition-all border border-border focus-visible:ring-2 focus-visible:ring-primary focus:outline-none">Login</Link>
+          <Link href="/sign-up" className="font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-primary text-primary-foreground shadow-md hover:bg-primary/90 transition-all focus-visible:ring-2 focus-visible:ring-primary focus:outline-none">Sign Up</Link>
+        </nav>
         {/* Logo */}
-        <Image src="/Logo_klein.svg" alt="BlissAI Logo" width={90} height={90} className="mb-6 logo-img" />
+        <div className="flex flex-col items-center w-full mt-20 sm:mt-0">
+          <Image src="/Logo_klein.svg" alt="BlissAI Logo" width={90} height={90} className="mb-6 logo-img drop-shadow-lg" priority />
+        </div>
         {/* Main Content (no card) */}
-        <div className="w-full max-w-2xl flex flex-col items-center animate-fade-in pb-12">
-          <div className="mb-8 text-center">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight">Willkommen bei BlissAI</h1>
-            <p className="text-lg text-muted-foreground font-medium">Wähle eine Kategorie und teste BlissAI direkt mit einer Beispiel-Frage!</p>
+        <section className="w-full max-w-2xl flex flex-col items-center animate-fade-in pb-8 sm:pb-12 px-1 sm:px-0">
+          <div className="mb-6 sm:mb-8 text-center">
+            <h1 className="text-3xl xs:text-4xl md:text-5xl font-extrabold mb-2 tracking-tight leading-tight drop-shadow-sm">Willkommen bei BlissAI</h1>
+            <p className="text-base xs:text-lg text-muted-foreground font-medium">Wähle eine Kategorie und teste BlissAI direkt mit einer Beispiel-Frage!</p>
           </div>
-          <HomeExampleQuestions 
-            onDemoAnswer={async (question: string) => {
-              setDemoAnswer(null)
-              setDemoError("")
-              setDemoLoading(true)
-              try {
-                const res = await fetch("/api/demo-answer", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ question })
-                })
-                if (!res.ok) throw new Error("Fehler beim Abrufen der AI-Antwort.")
-                const data = await res.json()
-                setDemoAnswer(data.answer)
-              } catch (e) {
-                setDemoError("Fehler beim Abrufen der AI-Antwort.")
-              } finally {
-                setDemoLoading(false)
-              }
-            }}
-            demoLoading={demoLoading}
-          />
+          <div className="w-full">
+            <HomeExampleQuestions 
+              onDemoAnswer={async (question: string) => {
+                setDemoAnswer(null)
+                setDemoError("")
+                setDemoLoading(true)
+                try {
+                  const res = await fetch("/api/demo-answer", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ question })
+                  })
+                  if (!res.ok) throw new Error("Fehler beim Abrufen der AI-Antwort.")
+                  const data = await res.json()
+                  setDemoAnswer(data.answer)
+                } catch (e) {
+                  setDemoError("Fehler beim Abrufen der AI-Antwort.")
+                } finally {
+                  setDemoLoading(false)
+                }
+              }}
+              demoLoading={demoLoading}
+            />
+          </div>
           {/* Demo-Antwort anzeigen */}
           {demoLoading && (
-            <div className="mt-16 w-full flex justify-center animate-pulse text-muted-foreground">BlissAI denkt ...</div>
+            <div className="mt-12 sm:mt-16 w-full flex justify-center animate-pulse text-muted-foreground text-base xs:text-lg">BlissAI denkt ...</div>
           )}
           {demoError && (
-            <div className="mt-8 w-full bg-destructive/10 text-destructive text-center p-4 rounded-xl">{demoError}</div>
+            <div className="mt-8 w-full bg-destructive/10 text-destructive text-center p-4 rounded-xl shadow-md">{demoError}</div>
           )}
-          {demoAnswer && !demoLoading && (
+          {demoAnswer && !demoLoading && typeof demoAnswer === "string" && (
             <DemoAnswerCard answer={demoAnswer} />
           )}
-        </div>
+        </section>
       </main>
     )
   }
@@ -104,15 +108,15 @@ function DemoAnswerCard({ answer }: { answer: string }) {
     setTimeout(() => setIsCopied(false), 2000)
   }
   return (
-    <div className="mt-8 w-full max-w-xl mx-auto bg-background/90 rounded-2xl shadow-lg p-6 animate-fade-in relative">
+    <div className="mt-8 w-full max-w-xl mx-auto bg-background/80 backdrop-blur-md rounded-2xl shadow-xl p-4 sm:p-6 animate-fade-in relative border border-border transition-all" style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.10)', backdropFilter: 'blur(8px)' }}>
       <button
-        className="absolute top-4 right-4 p-2 rounded-lg bg-muted hover:bg-accent transition-colors"
+        className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 rounded-lg bg-muted hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-primary focus:outline-none"
         onClick={handleCopy}
         aria-label="Antwort kopieren"
       >
         {isCopied ? <CheckCheck className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
       </button>
-      <div className="prose prose-neutral dark:prose-invert max-w-full">
+      <div className="prose prose-neutral dark:prose-invert max-w-full text-sm xs:text-base break-words">
         <ReactMarkdown
           components={{
             code({ className, children, ...props }: { className?: string; children?: React.ReactNode }) {

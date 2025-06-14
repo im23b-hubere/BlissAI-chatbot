@@ -57,7 +57,17 @@ export function LoginForm() {
         return
       }
 
-      router.push("/chat")
+      // Nach erfolgreichem Login: neuen Chat anlegen und weiterleiten
+      try {
+        const chatRes = await fetch("/api/chats", { method: "POST" })
+        if (!chatRes.ok) throw new Error("Failed to create chat")
+        const chatData = await chatRes.json()
+        const chatId = chatData.chat.id
+        router.push(`/chat/${chatId}`)
+      } catch (e) {
+        setError("Chat konnte nicht erstellt werden. Bitte versuche es erneut.")
+        return
+      }
       router.refresh()
     } catch (error) {
       setError("An error occurred. Please try again.")

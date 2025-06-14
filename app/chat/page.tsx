@@ -15,18 +15,6 @@ function ChatPageContent() {
     }
   }, [status, router])
 
-  // If we're on the base chat page, check if we need to create a new chat or redirect to the most recent one
-  useEffect(() => {
-    if (status === "authenticated") {
-      // Immer neuen Chat erstellen und weiterleiten
-      fetch("/api/chats", { method: "POST" })
-        .then((res) => res.json())
-        .then((data) => {
-          router.push(`/chat/${data.chat.id}`)
-        })
-    }
-  }, [router, status])
-
   // If still loading, show loading state
   if (status === "loading" || status === "unauthenticated") {
     return (

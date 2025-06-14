@@ -248,17 +248,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.2 }}
-                  className="flex items-start gap-2 sm:gap-4 p-2 sm:p-4 rounded-xl bg-muted/60"
                 >
-                  <div className="shrink-0 size-6 sm:size-8 rounded-full flex items-center justify-center bg-secondary">
-                    <Bot className="size-3 sm:size-4 text-secondary-foreground" aria-hidden="true" />
-                  </div>
-                  <div className="flex-1 min-w-0 space-y-1.5">
-                    <p className="font-medium text-xs sm:text-sm">BlissAI</p>
-                    <div className="prose prose-xs sm:prose-sm dark:prose-invert max-w-full">
-                      <Message message={message} />
-                    </div>
-                  </div>
+                  <Message message={message} />
                 </motion.div>
               ))
             )}

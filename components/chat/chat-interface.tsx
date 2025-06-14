@@ -213,8 +213,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   }
 
   return (
-    <div className="flex flex-col h-screen min-h-screen w-full overflow-hidden">
-      <div className="flex-1 overflow-y-auto p-2 sm:p-4" ref={scrollRef} style={{ minHeight: 0, maxHeight: '100vh' }}>
+    <div className="flex flex-col h-screen min-h-screen w-full overflow-x-hidden max-w-full">
+      <div className="flex-1 overflow-y-auto p-2 sm:p-4 pb-32 sm:pb-16" ref={scrollRef} style={{ minHeight: 0, maxHeight: '100vh' }}>
         <div className="space-y-3 sm:space-y-4 max-w-full sm:max-w-3xl mx-auto">
           <AnimatePresence initial={false}>
             {messages.length === 0 ? (
@@ -293,7 +293,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
           )}
         </div>
       </div>
-      <div className="sticky bottom-0 left-0 w-full border-t bg-background/90 backdrop-blur-sm z-10 p-2 sm:p-4 pb-14 sm:pb-16">
+      <div className="fixed bottom-0 left-0 w-full border-t bg-background/95 backdrop-blur-sm z-20 p-2 sm:static sm:p-4 sm:pb-16">
         <form onSubmit={handleSubmit} className="max-w-full sm:max-w-3xl mx-auto">
           <div className="relative flex space-x-2">
             <Input
@@ -317,7 +317,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
               )}
             </Button>
           </div>
-          <p className="text-xs text-center text-muted-foreground mt-2">
+          <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-2 break-words w-full leading-tight px-1">
             Powered by BlissAI | Responses may take a moment
           </p>
         </form>

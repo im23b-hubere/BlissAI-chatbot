@@ -9,11 +9,8 @@ async function getCurrentUser() {
     const session = await getServerSession();
     
     if (!session?.user?.email) {
-      console.log("No session or email found");
       return null;
     }
-    
-    console.log("Session found for email:", session.user.email);
     
     // Benutzer aus der DB abrufen
     const user = await prisma.user.findUnique({
@@ -23,7 +20,6 @@ async function getCurrentUser() {
     });
 
     if (!user) {
-      console.log("User not found in DB, creating demo user");
       // Für Demo-Zwecke: Wenn ein Benutzer eingeloggt ist, aber nicht in der DB vorhanden,
       // erstellen wir den Demo-Benutzer
       try {
@@ -31,11 +27,11 @@ async function getCurrentUser() {
           data: {
             id: "demo-user",
             name: "Demo User",
-            email: "demo@example.com"
+            email: "demo@example.com",
+            hashedPassword: "demo"
           }
         });
       } catch (error) {
-        console.log("Error creating user, trying to find existing demo user");
         // Wenn es bereits existiert, versuchen wir es abzurufen
         return await prisma.user.findUnique({
           where: { email: "demo@example.com" }
@@ -43,7 +39,6 @@ async function getCurrentUser() {
       }
     }
     
-    console.log("Found user:", user.id);
     return user;
   } catch (error) {
     console.error("Error getting user:", error);
@@ -57,12 +52,9 @@ export async function GET() {
     const user = await getCurrentUser();
     
     if (!user) {
-      console.log("GET /api/chats - Unauthorized");
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    console.log("Fetching chats for user:", user.id);
-    
     const chats = await prisma.chat.findMany({
       where: {
         userId: user.id,
@@ -85,12 +77,9 @@ export async function POST() {
     const user = await getCurrentUser();
     
     if (!user) {
-      console.log("POST /api/chats - Unauthorized");
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    console.log("Creating new chat for user:", user.id);
-    
     const chat = await prisma.chat.create({
       data: {
         title: "New Chat",

@@ -31,7 +31,7 @@ export function UserNav({ isExpanded = true, user }: UserNavProps) {
   
   const handleSignOut = async () => {
     await signOut({ redirect: false })
-    router.push("/login")
+    window.location.href = "/login"
   }
   
   const userInitials = user?.name

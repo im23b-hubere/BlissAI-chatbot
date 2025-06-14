@@ -64,12 +64,10 @@ export function LoginForm() {
         const chatData = await chatRes.json()
         const chatId = chatData.chat.id
         router.push(`/chat/${chatId}`)
-        window.location.reload()
       } catch (e) {
         setError("Chat konnte nicht erstellt werden. Bitte versuche es erneut.")
         return
       }
-      router.refresh()
     } catch (error) {
       setError("An error occurred. Please try again.")
     } finally {

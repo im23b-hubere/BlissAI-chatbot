@@ -27,7 +27,11 @@ interface Chat {
   updatedAt: Date
 }
 
-export function Sidebar() {
+interface SidebarProps {
+  onChatSelect?: () => void
+}
+
+export function Sidebar({ onChatSelect }: SidebarProps) {
   const router = useRouter()
   const pathname = usePathname()
   const [chats, setChats] = useState<Chat[]>([])
@@ -86,6 +90,7 @@ export function Sidebar() {
       setChats((prev) => [data.chat, ...prev])
       setSelectedChat(data.chat.id)
       router.push(`/chat/${data.chat.id}`)
+      if (onChatSelect) onChatSelect()
     } catch (error) {
       console.error("Error creating new chat:", error)
       toast({
@@ -101,6 +106,7 @@ export function Sidebar() {
   const selectChat = (chatId: string) => {
     setSelectedChat(chatId)
     router.push(`/chat/${chatId}`)
+    if (onChatSelect) onChatSelect()
   }
 
   const deleteChat = async (chatId: string) => {

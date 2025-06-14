@@ -6,7 +6,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcrypt"
 
 // Wir verwenden die gleiche Konfiguration wie in auth.ts, aber erstellen eine eigene Handler-Instanz
-const handler = NextAuth({
+const authOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     CredentialsProvider({
@@ -75,6 +75,8 @@ const handler = NextAuth({
       return baseUrl + "/chat";
     }
   }
-})
+};
 
-export { handler as GET, handler as POST } 
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST, authOptions }; 

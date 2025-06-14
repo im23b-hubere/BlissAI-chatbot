@@ -40,7 +40,7 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center justify-center px-2 sm:px-4 py-8 sm:py-12 bg-gradient-to-br from-background to-muted/50 relative overflow-x-hidden">
         {/* Top Nav */}
         <nav className="z-20 w-full flex justify-end">
-          <div className="fixed top-2 left-0 right-0 mx-auto w-[98vw] max-w-xs sm:static sm:w-auto sm:max-w-none flex gap-2 sm:gap-4 items-center justify-end sm:justify-end px-2 py-2 sm:p-6 bg-background/70 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none rounded-2xl sm:rounded-none shadow-lg sm:shadow-none border border-border/60 sm:border-none transition-all duration-300" style={{boxShadow: '0 4px 24px 0 rgba(31,38,135,0.08)'}}>
+          <div className="fixed top-2 left-0 right-0 mx-auto w-[98vw] max-w-xs sm:static sm:w-auto sm:max-w-none flex gap-2 sm:gap-4 items-center justify-center sm:justify-end px-2 py-2 sm:p-6 transition-all duration-300">
             <Link href="/login" className="font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-background/80 shadow-md hover:bg-accent/60 transition-all border border-border focus-visible:ring-2 focus-visible:ring-primary focus:outline-none">Login</Link>
             <Link href="/sign-up" className="font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-primary text-primary-foreground shadow-md hover:bg-primary/90 transition-all focus-visible:ring-2 focus-visible:ring-primary focus:outline-none">Sign Up</Link>
           </div>
